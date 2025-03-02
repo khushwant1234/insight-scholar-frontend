@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+*{
+  
+}
+
+/* ... */
+
+@keyframes reveal {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+@keyframes glitchOverlay {
+  0% {
+    background-position: center;
+    opacity: 0;
+  }
+  50% {
+    background-position: center;
+    opacity: 0.1;
+  }
+  100% {
+    background-position: center;
+    opacity: 0;
+  }
+}
+
+@keyframes hellReveal {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-reveal {
+  animation: reveal 1.5s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+.animate-hell-reveal {
+  animation: hellReveal 0.5s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  animation-delay: 1s;
+}
+
+.animate-glitch {
+  animation: glitch 0.5s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+  animation-delay: 1.5s;
+}
+
+.animate-glitch-overlay {
+  background: repeating-linear-gradient(
+    90deg,
+    #D43134C4 0,
+    #D43134C4 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  animation: glitchOverlay 3s infinite;
+  pointer-events: none;
+}
