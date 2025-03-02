@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { PostApiCall, GetApiCall } from "../utils/apiCall";
 import { setItem } from "../utils/storage";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../context/userContext";
 import Loading from "../Components/Loading";
 import FadeWrapper from "../Components/fadeIn";
 

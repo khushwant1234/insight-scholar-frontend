@@ -1,9 +1,9 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import CommunityChat from "../components/CommunityChat";
-import { UserContext } from "../context/UserContext";
+import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
+// import CommunityChat from "../components/CommunityChat";
+import { UserContext } from "../context/userContext";
 import { toast } from "react-toastify";
 import { GetApiCall } from "../utils/apiCall";
 import FadeWrapper from "../Components/fadeIn";

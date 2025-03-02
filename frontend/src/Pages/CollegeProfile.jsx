@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
 import { GetApiCall, PutApiCall, PostApiCall } from "../utils/apiCall";
 import { toast } from "react-toastify";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../context/userContext";
 import Loading from "../Components/Loading";
 import PageNotFound from "../Components/PageNotFound";
 import FadeWrapper from "../Components/fadeIn";

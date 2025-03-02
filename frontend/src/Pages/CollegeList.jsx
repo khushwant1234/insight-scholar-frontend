@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { GetApiCall } from "../utils/apiCall";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
 import FadeWrapper from "../Components/fadeIn";
 
 const CollegeList = () => {

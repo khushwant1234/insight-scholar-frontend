@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../context/userContext";
 import { PutApiCall, GetApiCall } from "../utils/apiCall";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
 import FadeWrapper from "../Components/fadeIn";
 
 // Define your available college options

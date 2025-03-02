@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { PutApiCall } from "../utils/apiCall";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../context/userContext";
 import FadeWrapper from "../Components/fadeIn";
 
 const interestOptions = [
