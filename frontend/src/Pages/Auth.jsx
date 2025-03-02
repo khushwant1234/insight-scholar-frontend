@@ -143,13 +143,6 @@ const Auth = () => {
     <FadeWrapper>
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-500">
         <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-2xl">
-          <div className="flex justify-center mb-6">
-            <img
-              src={isSignup ? "icons/signupimg.svg" : "icons/loginimg.svg"}
-              alt="Illustration"
-              className="w-24 h-24"
-            />
-          </div>
           <h1 className="text-3xl font-extrabold text-center text-gray-800 mb-6">
             {isSignup ? "SIGN UP" : "LOGIN"}
           </h1>
