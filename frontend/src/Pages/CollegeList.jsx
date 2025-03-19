@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import FadeWrapper from "../Components/fadeIn";
+import Loading from "../Components/Loading";
+
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const CollegeList = () => {
   const [colleges, setColleges] = useState([]);
@@ -13,17 +16,20 @@ const CollegeList = () => {
   useEffect(() => {
     const fetchColleges = async () => {
       try {
-        const data = await GetApiCall("http://localhost:8000/api/college");
-        // console.log(data);
-        // Assuming API returns an object with a 'colleges' array or the array directly
+        const data = await GetApiCall(`${backendUrl}/api/college/allColleges`);
         if (data.success && data.colleges) {
           setColleges(data.colleges);
         } else if (Array.isArray(data)) {
           setColleges(data);
         } else {
+          if (data.success) {
+            toast.error("SUCCESS YAYAY");
+          }
+          console.log(data);
           toast.error("Failed to fetch colleges");
         }
       } catch (error) {
+        console.log(error);
         toast.error("Failed to fetch colleges");
       } finally {
         setLoading(false);
@@ -36,9 +42,7 @@ const CollegeList = () => {
   if (loading) {
     return (
       <FadeWrapper>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-xl text-gray-700">Loading Colleges...</div>
-        </div>
+        <Loading></Loading>
       </FadeWrapper>
     );
   }

@@ -9,6 +9,12 @@ export default defineConfig({
     tailwindcss()
   ],
   server: {
-    port: 3000
+    port: 3000,
+    allowedHosts: [
+      "df66-223-184-182-219.ngrok-free.app"
+    ]
+  },
+  optimizeDeps: {
+    include: ['react-scroll-to-bottom']
   }
 })

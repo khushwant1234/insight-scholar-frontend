@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import FadeWrapper from "../Components/fadeIn";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const HelpCenter = () => {
   return (
     <FadeWrapper>

@@ -23,6 +23,9 @@ import InterestsSelection from "./Pages/InterestsSelection";
 import UpdateProfile from "./Pages/UpdateProfile";
 import HelpCenter from "./Pages/HelpCenter";
 import { AnimatePresence } from "framer-motion";
+import MentorProfile from "./Pages/MentorProfile.jsx";
+import PageNotFound from "./Components/PageNotFound.jsx";
+import VerifyEmail from "./Pages/VerifyEmail.jsx";
 // import FadeWrapper from "./Components/fadeIn.jsx";
 
 const PrivateRoute = ({ element }) => {
@@ -67,7 +70,19 @@ const CheckAuth = ({ element }) => {
   }, []);
 
   if (isAuthenticated === null) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        Loading... Try Logging in again
+        <button
+          onClick={() => {
+            localStorage.removeItem("token");
+            window.location.reload();
+          }}
+        >
+          Logout
+        </button>
+      </div>
+    );
   }
   if (isAuthenticated) {
     return <Navigate to="/" />;
@@ -80,6 +95,7 @@ const AnimatedRoutes = () => {
   return (
     <AnimatePresence exitBeforeEnter>
       <Routes location={location} key={location.pathname}>
+        <Route path="/verify-email/:token" element={<VerifyEmail />} />
         <Route path="/auth" element={<CheckAuth element={<Auth />} />} />
         <Route path="/" element={<PrivateRoute element={<Home />} />} />
         <Route path="/about" element={<PrivateRoute element={<About />} />} />
@@ -116,6 +132,10 @@ const AnimatedRoutes = () => {
           path="/help"
           element={<PrivateRoute element={<HelpCenter />} />}
         />
+        <Route path="/mentor/:id" element={<MentorProfile />} />
+
+        {/* Add this catch-all route at the end */}
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </AnimatePresence>
   );

@@ -3,6 +3,8 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import FadeWrapper from "../Components/fadeIn";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const CommentsPage = () => {
   // Example comments data - replace with API call
   const comments = [

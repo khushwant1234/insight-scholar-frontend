@@ -4,14 +4,24 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import { UserContext } from "../context/userContext";
 import { toast } from "react-toastify";
-import { GetApiCall, PutApiCall, DeleteApiCall } from "../utils/apiCall";
+import {
+  GetApiCall,
+  PutApiCall,
+  DeleteApiCall,
+  PostApiCall,
+} from "../utils/apiCall";
 import FadeWrapper from "../Components/fadeIn";
+import Loading from "../Components/Loading";
+import { use } from "react";
+
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const UserProfile = () => {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(true);
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, userCollege, setUserCollege } =
+    useContext(UserContext);
   const navigate = useNavigate();
   const [postloading, setPostloading] = useState(true);
   const [posts, setPosts] = useState([]);
@@ -22,9 +32,7 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await GetApiCall(
-          `http://localhost:8000/api/user/profile`
-        );
+        const response = await PostApiCall(`${backendUrl}/api/user/profile`);
         const { success, ...userData } = response;
         setUser(userData);
         if (response.success) {
@@ -34,16 +42,57 @@ const UserProfile = () => {
         toast.error("Failed to fetch user data");
       }
     };
+
     fetchUserData();
   }, [setUser]);
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchUserPosts = async () => {
+      try {
+        const response = await PostApiCall(`${backendUrl}/api/post/user/${id}`);
+        if (response.success && response.posts) {
+          setPosts(response.posts);
+        } else {
+          setPosts([]);
+        }
+      } catch (err) {
+        toast.error("Failed to fetch user posts");
+      } finally {
+        // setLoading(false);
+      }
+    };
+    fetchUserPosts();
+  }, [user]);
+
+  useEffect(() => {
+    setLoading(true);
+    if (user) {
+      const fetchCollege = async () => {
+        try {
+          const data = await GetApiCall(
+            `http://localhost:8000/api/college/${user.college}`
+          );
+          if (data.success && data.college) {
+            setUserCollege(data.college);
+          } else {
+            setUserCollege(null);
+          }
+        } catch (error) {
+          setUserCollege(null);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchCollege();
+    }
+  }, [user]);
 
   // Fetch User Posts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await GetApiCall(
-          `http://localhost:8000/api/post/user/${id}`
-        );
+        const response = await PostApiCall(`${backendUrl}/api/post/user/${id}`);
         if (response.success && response.posts) {
           setPosts(response.posts);
         } else {
@@ -55,7 +104,7 @@ const UserProfile = () => {
       setPostloading(false);
     };
     fetchPosts();
-  }, [id]);
+  }, [user]);
 
   // Handle post editing
   const handleEdit = (post) => {
@@ -77,10 +126,11 @@ const UserProfile = () => {
     try {
       const updatedData = { content: editedContent };
       const data = await PutApiCall(
-        `http://localhost:8000/api/post/${postId}`,
+        `${backendUrl}/api/post/${postId}`,
         updatedData
       );
-      if (data && data._id) {
+
+      if (data.success) {
         toast.success("Post updated successfully");
         setPosts(
           posts.map((post) =>
@@ -94,7 +144,7 @@ const UserProfile = () => {
       }
     } catch (error) {
       toast.error("Error updating post");
-      console.error("Update post error:", error);
+      // console.error("Update post error:", error);
     }
   };
 
@@ -110,7 +160,7 @@ const UserProfile = () => {
     if (!confirmDelete) return;
     const id = postId;
     try {
-      const data = await DeleteApiCall(`http://localhost:8000/api/post/${id}`);
+      const data = await DeleteApiCall(`${backendUrl}/api/post/${id}`);
       if (data && data.message) {
         toast.success("Post deleted successfully");
         setPosts(posts.filter((post) => post._id !== postId));
@@ -119,16 +169,14 @@ const UserProfile = () => {
       }
     } catch (error) {
       toast.error("Error deleting post");
-      console.error("Delete post error:", error);
+      // console.error("Delete post error:", error);
     }
   };
 
   if (loading) {
     return (
       <FadeWrapper>
-        <div className="min-h-screen bg-[#D9D9D9] flex items-center justify-center">
-          <div className="text-[#484848] text-xl">Loading...</div>
-        </div>
+        <Loading />
       </FadeWrapper>
     );
   }
@@ -153,19 +201,32 @@ const UserProfile = () => {
                   Stats
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
-                  {Object.entries(user.stats).map(([key, value]) => (
-                    <div
-                      key={key}
-                      className="text-center p-3 bg-[#D9D9D9] rounded-lg"
-                    >
-                      <div className="text-2xl font-bold text-[#D43134C4]">
-                        {value}
-                      </div>
-                      <div className="text-sm text-[#484848] capitalize">
-                        {key.replace(/([A-Z])/g, " $1").trim()}
-                      </div>
+                  {/* Show karma points */}
+                  <div className="text-center p-3 bg-[#D9D9D9] rounded-lg">
+                    <div className="text-2xl font-bold text-[#D43134C4]">
+                      {user.karma}
                     </div>
-                  ))}
+                    <div className="text-sm text-[#484848] capitalize">
+                      Karma Points
+                    </div>
+                  </div>
+
+                  {/* Filter out upvotes from stats and show other stats */}
+                  {Object.entries(user.stats)
+                    .filter(([key]) => key !== "upvotes")
+                    .map(([key, value]) => (
+                      <div
+                        key={key}
+                        className="text-center p-3 bg-[#D9D9D9] rounded-lg"
+                      >
+                        <div className="text-2xl font-bold text-[#D43134C4]">
+                          {value}
+                        </div>
+                        <div className="text-sm text-[#484848] capitalize">
+                          {key.replace(/([A-Z])/g, " $1").trim()}
+                        </div>
+                      </div>
+                    ))}
                 </div>
               </div>
               {/* Interests */}
@@ -183,6 +244,30 @@ const UserProfile = () => {
                     </span>
                   ))}
                 </div>
+                {user.interests.length === 0 && (
+                  <div className="mt-4 flex justify-center">
+                    <button
+                      onClick={() => navigate("/interests")}
+                      className="px-4 py-2 bg-[#D43134C4] text-white rounded-md hover:bg-[#D43134C4]/80 transition-colors text-sm flex items-center gap-2"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 4v16m8-8H4"
+                        />
+                      </svg>
+                      Add Interests
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -312,7 +397,10 @@ const UserProfile = () => {
                   <h1 className="text-3xl font-bold text-[#484848]">
                     {user.name}
                   </h1>
-                  <p className="text-[#484848]">{user.college}</p>
+                  <p className="text-[#484848]">
+                    {userCollege ? userCollege.name : "College Not Found"}
+                  </p>
+
                   <p className="text-[#484848]">
                     {user.major} • {user.year}
                   </p>

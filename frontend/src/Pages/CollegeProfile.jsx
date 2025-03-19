@@ -9,6 +9,8 @@ import Loading from "../Components/Loading";
 import PageNotFound from "../Components/PageNotFound";
 import FadeWrapper from "../Components/fadeIn";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const CollegeProfile = () => {
   const { id } = useParams();
   const { user, setUser } = useContext(UserContext);
@@ -32,11 +34,12 @@ const CollegeProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await GetApiCall(
+        const response = await PostApiCall(
           `http://localhost:8000/api/user/profile`
         );
         const { success, ...userData } = response;
         setUser(userData);
+        // console.log(userData);
       } catch (err) {
         toast.error("Failed to fetch user data");
       }
@@ -71,7 +74,7 @@ const CollegeProfile = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const data = await GetApiCall(
+        const data = await PostApiCall(
           `http://localhost:8000/api/post/college/${id}`
         );
         if (data.success && data.posts) {
@@ -111,27 +114,9 @@ const CollegeProfile = () => {
   }, [joinloading]);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await GetApiCall(
-          `http://localhost:8000/api/user/profile`
-        );
-        const { success, ...userData } = response;
-        setUser(userData);
-        if (response.success) {
-          setLoading(false);
-        }
-      } catch (err) {
-        toast.error("Failed to fetch user data");
-      }
-    };
-    fetchUserData();
-  }, [id]);
-
-  useEffect(() => {
     const fetchReplies = async () => {
       try {
-        const data = await GetApiCall(
+        const data = await PostApiCall(
           `http://localhost:8000/api/reply/post/${id}`
         );
         if (data.success && data.replies) {
@@ -156,7 +141,7 @@ const CollegeProfile = () => {
       await Promise.all(
         posts.map(async (post) => {
           try {
-            const data = await GetApiCall(
+            const data = await PostApiCall(
               `http://localhost:8000/api/reply/post/${post._id}`
             );
             // console.log(data);
@@ -174,6 +159,50 @@ const CollegeProfile = () => {
       fetchRepliesForPosts();
     }
   }, [posts]);
+
+  // Initialize upvotedPosts state from user.upvotedPosts when user data is fetched
+  useEffect(() => {
+    if (user && user.upvotedPosts) {
+      const initialUpvotes = {};
+      user.upvotedPosts.forEach((postId) => {
+        initialUpvotes[postId] = true;
+      });
+      setUpvotedPosts(initialUpvotes);
+      console.log("Upvoted posts initialized:", initialUpvotes);
+    }
+
+    // console.log(user.upvotedPosts);
+  }, [user]);
+
+  // Improved fetchUserUpvotes function
+  const fetchUserUpvotes = async () => {
+    if (!user || !user._id) return;
+
+    try {
+      const response = await GetApiCall(
+        `${backendUrl}/api/upvote/user/${user._id}`
+      );
+      // console.log(response);
+
+      if (response.success && response.upvotes) {
+        // Create a map of post IDs that the user has upvoted
+        const upvotedMap = {};
+        response.upvotes.forEach((upvote) => {
+          upvotedMap[upvote.post] = true;
+        });
+        setUpvotedPosts(upvotedMap);
+      }
+    } catch (error) {
+      console.error("Error fetching user upvotes:", error);
+    }
+  };
+
+  // Call the function when user or posts change
+  useEffect(() => {
+    if (user && user._id) {
+      fetchUserUpvotes();
+    }
+  }, [user, posts.length]);
 
   const handleShare = async () => {
     try {
@@ -286,17 +315,23 @@ const CollegeProfile = () => {
     }
   };
 
-  // New handler to toggle upvote for a given post
+  // Update handlePostUpvote function
   const handlePostUpvote = async (postId) => {
-    const alreadyUpvoted = upvotedPosts[postId] || false;
-    // Toggle: +1 if not upvoted; -1 if already upvoted (allowing user to remove upvote)
-    const upvoteChange = alreadyUpvoted ? -1 : 1;
+    if (!user) {
+      toast.info("Please log in to upvote posts");
+      return;
+    }
+
     try {
+      const alreadyUpvoted = upvotedPosts[postId] || false;
+      const userId = user._id;
+      const upvoteChange = alreadyUpvoted ? -1 : 1;
+
       const data = await PutApiCall(
-        `http://localhost:8000/api/post/upvotes/${postId}`,
-        { upvoteChange }
+        `${backendUrl}/api/post/upvotes/${postId}`,
+        { upvoteChange, userId }
       );
-      if (data) {
+      if (data.success) {
         // Update the post's upvotes count in the local posts state
         setPosts((prevPosts) =>
           prevPosts.map((post) =>
@@ -304,10 +339,26 @@ const CollegeProfile = () => {
           )
         );
 
-        // Toggle the upvoted status
-        setUpvotedPosts((prev) => ({ ...prev, [postId]: !alreadyUpvoted }));
+        // Update upvoted status in local state
+        setUpvotedPosts((prev) => ({
+          ...prev,
+          [postId]: !prev[postId],
+        }));
+
+        // Update the upvoted posts directly from the response
+        if (data.upvotedPosts) {
+          const newUpvotedMap = {};
+          data.upvotedPosts.forEach((postId) => {
+            newUpvotedMap[postId] = true;
+          });
+          setUpvotedPosts(newUpvotedMap);
+        }
+      } else {
+        // console.log(data?.response);
+        toast.error(data.error || "Failed to update upvote");
       }
     } catch (error) {
+      // console.log(error);
       toast.error("Error updating upvote");
       console.error("Upvote error:", error);
     }
@@ -375,8 +426,45 @@ const CollegeProfile = () => {
           </div>
         );
       case "comments":
+        // {
+        //   console.log(posts);
+        // }
         return (
           <div className="space-y-6">
+            <div className="mt-6">
+              <button
+                onClick={() => setShowPostForm(!showPostForm)}
+                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
+              >
+                {showPostForm ? "Cancel" : "Create Post"}
+              </button>
+              {showPostForm && (
+                <form onSubmit={handleCreatePost} className="mt-4 space-y-4">
+                  <textarea
+                    value={postContent}
+                    maxLength="300"
+                    onChange={(e) => setPostContent(e.target.value)}
+                    placeholder="What's on your mind? (Max 300 characters)"
+                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    rows="4"
+                  ></textarea>
+                  <input
+                    type="text"
+                    value={postMedia}
+                    onChange={(e) => setPostMedia(e.target.value)}
+                    placeholder="Media URL (optional)"
+                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                  <button
+                    type="submit"
+                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
+                  >
+                    Post
+                  </button>
+                </form>
+              )}
+            </div>
+
             {posts.map((post) => {
               const createdAt = new Date(post.createdAt).toLocaleString();
               const updatedAt = new Date(post.updatedAt).toLocaleString();
@@ -391,7 +479,7 @@ const CollegeProfile = () => {
                         <img
                           src={post.author.profilePic || "/user-icon.svg"}
                           alt={post.author.name}
-                          className="w-10 h-10 rounded-full "
+                          className="w-10 h-10 rounded-full"
                         />
                       )}
                       <h4 className="font-medium text-[#484848]">
@@ -407,20 +495,132 @@ const CollegeProfile = () => {
                   </div>
                   <p className="text-[#484848]">{post.content}</p>
 
+                  {/* Display post media */}
+                  {post.media && post.media.length > 0 && (
+                    <div className="mt-3">
+                      {post.media.map((mediaUrl, index) => {
+                        // Extract YouTube video ID if it's a YouTube link
+                        const youtubeMatch = mediaUrl.match(
+                          /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/
+                        );
+
+                        // Check if media is a YouTube video
+                        if (youtubeMatch && youtubeMatch[1]) {
+                          const videoId = youtubeMatch[1];
+                          return (
+                            <div key={index} className="my-2 aspect-video">
+                              <iframe
+                                width="100%"
+                                height="315"
+                                src={`https://www.youtube.com/embed/${videoId}`}
+                                title="YouTube video player"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="rounded-lg"
+                              ></iframe>
+                            </div>
+                          );
+                        }
+                        // Check if media is an image
+                        else if (mediaUrl.match(/\.(jpeg|jpg|gif|png)$/i)) {
+                          return (
+                            <img
+                              key={index}
+                              src={mediaUrl}
+                              alt="Post media"
+                              className="max-h-96 rounded-lg object-contain my-2"
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = "/image-placeholder.png";
+                              }}
+                            />
+                          );
+                        }
+                        // Check if media is a regular video (not YouTube)
+                        else if (mediaUrl.match(/\.(mp4|mov|avi|wmv)$/i)) {
+                          return (
+                            <div key={index} className="my-2">
+                              <video
+                                controls
+                                className="max-h-96 rounded-lg w-full"
+                                onError={(e) =>
+                                  (e.target.style.display = "none")
+                                }
+                              >
+                                <source src={mediaUrl} />
+                                Your browser does not support video playback.
+                              </video>
+                            </div>
+                          );
+                        }
+                        // Default for other media types
+                        else {
+                          return (
+                            <a
+                              key={index}
+                              href={mediaUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-500 hover:underline block mt-2"
+                            >
+                              View attached media
+                            </a>
+                          );
+                        }
+                      })}
+                    </div>
+                  )}
+
                   {/* Upvote option */}
                   <div className="flex items-center mt-2 gap-2">
                     <button
                       onClick={() => handlePostUpvote(post._id)}
-                      className={`px-3 py-1 rounded transition-colors ${
+                      className={`flex items-center gap-1 px-3 py-1.5 rounded-md transition-colors ${
                         upvotedPosts[post._id]
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-black"
+                          ? "bg-[#D43134C4]/80 text-white"
+                          : "bg-gray-200 hover:bg-gray-300 text-gray-700"
                       }`}
+                      disabled={!user}
                     >
-                      {upvotedPosts[post._id] ? "Upvoted" : "Upvote"}
+                      {upvotedPosts[post._id] ? (
+                        <>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          Upvoted
+                        </>
+                      ) : (
+                        <>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 15l7-7 7 7"
+                            />
+                          </svg>
+                          Upvote
+                        </>
+                      )}
                     </button>
-                    <span className="text-sm text-gray-600">
-                      {post.upvotes} Upvotes
+                    <span className="text-sm text-gray-600 flex items-center">
+                      {post.upvotes} {post.upvotes === 1 ? "upvote" : "upvotes"}
                     </span>
                   </div>
 
@@ -581,39 +781,6 @@ const CollegeProfile = () => {
             </div>
 
             {/* New: Create Post Button and Form */}
-            <div className="mt-6">
-              <button
-                onClick={() => setShowPostForm(!showPostForm)}
-                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
-              >
-                {showPostForm ? "Cancel" : "Create Post"}
-              </button>
-              {showPostForm && (
-                <form onSubmit={handleCreatePost} className="mt-4 space-y-4">
-                  <textarea
-                    value={postContent}
-                    maxLength="300"
-                    onChange={(e) => setPostContent(e.target.value)}
-                    placeholder="What's on your mind? (Max 300 characters)"
-                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    rows="4"
-                  ></textarea>
-                  <input
-                    type="text"
-                    value={postMedia}
-                    onChange={(e) => setPostMedia(e.target.value)}
-                    placeholder="Media URL (optional)"
-                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                  />
-                  <button
-                    type="submit"
-                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
-                  >
-                    Post
-                  </button>
-                </form>
-              )}
-            </div>
 
             {/* Tabs */}
             <div className="mt-8 border-b border-[#D43134C4]/20">

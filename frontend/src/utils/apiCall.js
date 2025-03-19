@@ -43,12 +43,17 @@ export const GetApiCall = async (url) => {
 };
 
 export const PostApiCall = async (url, payload) => {
-  const token = await getItem("token");
-  const config = {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-  };
-  const response = await axios.post(url, payload, config);
-  return response.data;
+  try {
+    const token = await getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const { data } = await axios.post(url, payload, config);
+    return data;
+  } catch (error) {
+    handleApiError(error);
+    return { success: false };
+  }
 };
 
 export const PutApiCall = async (url, formData) => {

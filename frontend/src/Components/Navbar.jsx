@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import { removeItem } from "../utils/storage.js";
@@ -23,7 +23,11 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="text-xl font-bold text-[#D43134C4]">
-            <img src="/logonobg1.png" alt="Insight Scholar" className="h-16" />
+            <img
+              src="/logonobg2.png"
+              alt="Insight Scholar"
+              className="h-14 w-14"
+            />
           </Link>
 
           <div className="hidden md:block flex-1 max-w-md mx-8">
@@ -42,6 +46,12 @@ const Navbar = () => {
               className="text-[#484848] hover:text-[#D43134C4]"
             >
               Colleges
+            </Link>
+            <Link
+              to="/mentors"
+              className="text-[#484848] hover:text-[#D43134C4]"
+            >
+              Mentors
             </Link>
             <Link
               to="/add-college"
@@ -118,6 +128,12 @@ const Navbar = () => {
                 className="text-[#484848] hover:text-[#D43134C4]"
               >
                 Colleges
+              </Link>
+              <Link
+                to="/mentors"
+                className="text-[#484848] hover:text-[#D43134C4]"
+              >
+                Mentors
               </Link>
               <Link
                 to="/add-college"

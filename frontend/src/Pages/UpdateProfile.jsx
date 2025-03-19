@@ -1,11 +1,13 @@
 import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../context/userContext";
-import { PutApiCall, GetApiCall } from "../utils/apiCall";
+import { PutApiCall, GetApiCall, PostApiCall } from "../utils/apiCall";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import FadeWrapper from "../Components/fadeIn";
+
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 // Define your available college options
 const collegeOptions = ["Shiv Nadar University", "IIT Delhi", "IIT Bombay"];
@@ -28,9 +30,7 @@ const UpdateProfile = () => {
     setLoading(true);
     const fetchUserData = async () => {
       try {
-        const response = await GetApiCall(
-          `http://localhost:8000/api/user/profile`
-        );
+        const response = await PostApiCall(`${backendUrl}/api/user/profile`);
         const { success, ...userData } = response;
         setUser(userData);
         if (response.success) {
@@ -81,7 +81,7 @@ const UpdateProfile = () => {
       };
 
       const data = await PutApiCall(
-        "http://localhost:8000/api/user/profile",
+        `${backendUrl}/api/user/profile`,
         updatedData
       );
       if (data.success) {

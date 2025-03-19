@@ -4,6 +4,8 @@ import { PutApiCall } from "../utils/apiCall";
 import { UserContext } from "../context/userContext";
 import FadeWrapper from "../Components/fadeIn";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const interestOptions = [
   "Programming",
   "Music",
@@ -30,7 +32,7 @@ const InterestsSelection = () => {
 
   const handleSubmit = async () => {
     try {
-      const data = await PutApiCall("http://localhost:8000/api/user/profile", {
+      const data = await PutApiCall(`${backendUrl}/api/user/profile`, {
         interests: selected,
       });
       if (data.success) {

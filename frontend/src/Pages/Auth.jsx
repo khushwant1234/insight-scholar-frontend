@@ -7,6 +7,8 @@ import { UserContext } from "../context/userContext";
 import Loading from "../Components/Loading";
 import FadeWrapper from "../Components/fadeIn";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const Auth = () => {
   const [isSignup, setIsSignup] = useState(false);
   const [signupForm, setSignupForm] = useState({
@@ -24,6 +26,8 @@ const Auth = () => {
   });
   const [collegeOptions, setCollegeOptions] = useState([]); // New state for fetched colleges
   const [loading, setLoading] = useState(true);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
   const navigate = useNavigate();
   const { setUser, setColleges } = useContext(UserContext);
 
@@ -35,7 +39,7 @@ const Auth = () => {
     setLoading(true);
     const fetchColleges = async () => {
       try {
-        const data = await GetApiCall("http://localhost:8000/api/college");
+        const data = await GetApiCall(`${backendUrl}/api/college/allColleges`);
         // Assuming API returns an object with a 'colleges' array or the array directly
         // console.log(data.colleges);
         // console.log(data.success);
@@ -45,11 +49,12 @@ const Auth = () => {
           setCollegeOptions(data.colleges); // Set fetched colleges in local state
         } else {
           // console.log("error in else");
-          toast.error("Failed to fetch colleges abc");
+          console.log(data);
+          toast.error("Failed to fetch colleges ");
         }
       } catch (error) {
         // console.log("error in catch");
-        // console.log(error);
+        console.log(error);
         toast.error("Failed to fetch colleges abc");
       } finally {
         setLoading(false);
@@ -89,33 +94,31 @@ const Auth = () => {
 
     try {
       const data = await PostApiCall(
-        "http://localhost:8000/api/auth/register",
+        `${backendUrl}/api/auth/register`,
         signupForm
       );
       if (data.success) {
         await setItem("token", data.data.token);
-        toast.success("Signup Successful");
-        // Update context with user data
-        setUser(data.data.user);
-        // Navigate to interests selection page only after registration
-        navigate("/interests");
+        setRegistrationSuccess(true);
+        setRegisteredEmail(signupForm.email);
+        toast.success(
+          data.message || "Signup Successful! Please verify your email."
+        );
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.response.data.message || "Signup failed");
+      toast.error(error.response?.data?.message || "Signup failed");
     }
   };
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await PostApiCall(
-        "http://localhost:8000/api/auth/login",
-        loginForm
-      );
+      const data = await PostApiCall(`${backendUrl}/api/auth/login`, loginForm);
 
       if (data.success) {
+        console.log("Data", data);
         await setItem("token", data.data.token);
         toast.success("Login Successful");
         // Update context with user data
@@ -126,8 +129,25 @@ const Auth = () => {
       }
     } catch (error) {
       if (error.response) {
+        console.log(error);
         toast.error(error.response.data.message || "Login failed");
       }
+    }
+  };
+
+  const handleResendVerification = async (email) => {
+    try {
+      const response = await PostApiCall(
+        `${backendUrl}/api/auth/resend-verification`,
+        { email }
+      );
+      if (response.success) {
+        toast.success("Verification email sent successfully!");
+      } else {
+        toast.error(response.message || "Failed to send verification email");
+      }
+    } catch (error) {
+      toast.error("Failed to send verification email");
     }
   };
 
@@ -146,103 +166,152 @@ const Auth = () => {
           <h1 className="text-3xl font-extrabold text-center text-gray-800 mb-6">
             {isSignup ? "SIGN UP" : "LOGIN"}
           </h1>
-          <form
-            className="space-y-5"
-            onSubmit={isSignup ? handleSignupSubmit : handleLoginSubmit}
-          >
-            {isSignup ? (
-              <>
-                <input
-                  type="text"
-                  name="name"
-                  value={signupForm.name}
-                  onChange={handleSignupChange}
-                  placeholder="Full Name"
-                  className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
-                />
-                <select
-                  name="college"
-                  value={signupForm.college}
-                  onChange={handleSignupChange}
-                  className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
-                >
-                  <option value="">Select College</option>
-                  {collegeOptions.map((college) => (
-                    <option key={college._id} value={college._id}>
-                      {college.name}
-                    </option>
-                  ))}
-                </select>
-                <input
-                  type="text"
-                  name="major"
-                  value={signupForm.major}
-                  onChange={handleSignupChange}
-                  placeholder="Major"
-                  className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
-                />
-                <input
-                  type="text"
-                  name="year"
-                  value={signupForm.year}
-                  onChange={handleSignupChange}
-                  placeholder="Year of Graduation"
-                  className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
-                />
-                <input
-                  type="text"
-                  name="linkedIn"
-                  value={signupForm.linkedIn}
-                  onChange={handleSignupChange}
-                  placeholder="LinkedIn Profile URL (optional)"
-                  className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
-                />
-                <input
-                  type="email"
-                  name="email"
-                  value={signupForm.email}
-                  onChange={handleSignupChange}
-                  placeholder="Email"
-                  className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
-                />
-                <input
-                  type="password"
-                  name="password"
-                  value={signupForm.password}
-                  onChange={handleSignupChange}
-                  placeholder="Password"
-                  className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
-                />
-              </>
-            ) : (
-              <>
-                <input
-                  type="email"
-                  name="email"
-                  value={loginForm.email}
-                  onChange={handleLoginChange}
-                  placeholder="Email"
-                  className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
-                />
-                <input
-                  type="password"
-                  name="password"
-                  value={loginForm.password}
-                  onChange={handleLoginChange}
-                  placeholder="Password"
-                  className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
-                />
-              </>
-            )}
-            <div className="flex justify-center">
-              <button
-                type="submit"
-                className="w-auto px-8 py-3 bg-purple-600 text-white rounded-md font-bold hover:bg-purple-700 transition-colors"
+          {registrationSuccess ? (
+            <div className="text-center">
+              <svg
+                className="w-20 h-20 text-green-500 mx-auto mb-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                {isSignup ? "SIGN UP" : "LOGIN"}
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <h2 className="text-2xl font-bold mb-4">
+                Registration Successful!
+              </h2>
+              <p className="mb-6">
+                We've sent a verification email to{" "}
+                <strong>{registeredEmail}</strong>. Please check your inbox and
+                verify your email address to continue.
+              </p>
+              <p className="text-sm text-gray-600 mb-4">
+                Didn't receive the email? Check your spam folder or request a
+                new verification email.
+              </p>
+              <button
+                onClick={() => {
+                  handleResendVerification(registeredEmail);
+                }}
+                className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 transition-colors"
+              >
+                Resend Verification Email
               </button>
+              <div className="mt-4">
+                <button
+                  onClick={() => {
+                    setIsSignup(false);
+                    setRegistrationSuccess(false);
+                  }}
+                  className="text-purple-600 hover:underline"
+                >
+                  Back to Login
+                </button>
+              </div>
             </div>
-          </form>
+          ) : (
+            <form
+              className="space-y-5"
+              onSubmit={isSignup ? handleSignupSubmit : handleLoginSubmit}
+            >
+              {isSignup ? (
+                <>
+                  <input
+                    type="text"
+                    name="name"
+                    value={signupForm.name}
+                    onChange={handleSignupChange}
+                    placeholder="Full Name"
+                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  />
+                  <select
+                    name="college"
+                    value={signupForm.college}
+                    onChange={handleSignupChange}
+                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  >
+                    <option value="">Select College</option>
+                    {collegeOptions.map((college) => (
+                      <option key={college._id} value={college._id}>
+                        {college.name}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    name="major"
+                    value={signupForm.major}
+                    onChange={handleSignupChange}
+                    placeholder="Major"
+                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  />
+                  <input
+                    type="text"
+                    name="year"
+                    value={signupForm.year}
+                    onChange={handleSignupChange}
+                    placeholder="Year of Graduation"
+                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  />
+                  <input
+                    type="text"
+                    name="linkedIn"
+                    value={signupForm.linkedIn}
+                    onChange={handleSignupChange}
+                    placeholder="LinkedIn Profile URL (optional)"
+                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    value={signupForm.email}
+                    onChange={handleSignupChange}
+                    placeholder="Email"
+                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  />
+                  <input
+                    type="password"
+                    name="password"
+                    value={signupForm.password}
+                    onChange={handleSignupChange}
+                    placeholder="Password"
+                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  />
+                </>
+              ) : (
+                <>
+                  <input
+                    type="email"
+                    name="email"
+                    value={loginForm.email}
+                    onChange={handleLoginChange}
+                    placeholder="Email"
+                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  />
+                  <input
+                    type="password"
+                    name="password"
+                    value={loginForm.password}
+                    onChange={handleLoginChange}
+                    placeholder="Password"
+                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  />
+                </>
+              )}
+              <div className="flex justify-center">
+                <button
+                  type="submit"
+                  className="w-auto px-8 py-3 bg-purple-600 text-white rounded-md font-bold hover:bg-purple-700 transition-colors"
+                >
+                  {isSignup ? "SIGN UP" : "LOGIN"}
+                </button>
+              </div>
+            </form>
+          )}
           <p className="text-center text-gray-600 mt-6">
             {isSignup ? (
               <>

@@ -4,6 +4,8 @@ import { PostApiCall } from "../utils/apiCall";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const AddColleges = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -54,10 +56,7 @@ const AddColleges = () => {
     console.log(payload);
     try {
       // Replace with your correct endpoint if needed
-      const data = await PostApiCall(
-        "http://localhost:8000/api/college",
-        payload
-      );
+      const data = await PostApiCall(`${backendUrl}/api/college`, payload);
       if (data.success) {
         toast.success("College added successfully");
         // navigate("/");
