@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import { GetApiCall, PutApiCall, PostApiCall } from "../utils/apiCall";
@@ -30,6 +30,10 @@ const CollegeProfile = () => {
   const [repliesByPost, setRepliesByPost] = useState({});
   // New state to track which post's replies drawer is open (store post _id)
   const [openDrawerPost, setOpenDrawerPost] = useState(null);
+  const [allColleges, setAllColleges] = useState([]);
+  const [collegesLoading, setCollegesLoading] = useState(true);
+  const [mentors, setMentors] = useState([]);
+  const [mentorsLoading, setMentorsLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -366,6 +370,50 @@ const CollegeProfile = () => {
 
   // New: Determine the selected post to display in the drawer
   const selectedPost = posts.find((post) => post._id === openDrawerPost);
+
+  useEffect(() => {
+    const fetchAllColleges = async () => {
+      try {
+        const data = await GetApiCall(
+          "http://localhost:8000/api/college/allColleges"
+        );
+        if (data.success && data.colleges) {
+          setAllColleges(data.colleges);
+        } else {
+          setAllColleges([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch colleges:", error);
+        setAllColleges([]);
+      } finally {
+        setCollegesLoading(false);
+      }
+    };
+
+    fetchAllColleges();
+  }, []);
+
+  useEffect(() => {
+    const fetchMentors = async () => {
+      try {
+        const data = await GetApiCall(
+          `http://localhost:8000/api/college/${id}/mentors`
+        );
+        if (data.success && data.mentors) {
+          setMentors(data.mentors);
+        } else {
+          setMentors([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch mentors:", error);
+        setMentors([]);
+      } finally {
+        setMentorsLoading(false);
+      }
+    };
+
+    fetchMentors();
+  }, [id]);
 
   if (loading) {
     return (
@@ -706,173 +754,395 @@ const CollegeProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#D9D9D9] flex flex-col">
+    <div className="min-h-screen bg-[#F5F7FA] flex flex-col">
       <Navbar />
       <div className="flex-1">
         {/* Hero Image */}
-        <div className="w-full h-[400px] relative">
+        <div className="w-full h-[300px] relative">
           <img
-            src={college.profilePic}
+            src={
+              college.profilePic ||
+              "https://via.placeholder.com/1200x300?text=College+Banner"
+            }
             alt={college.name}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60"></div>
+          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+            <div className="container mx-auto">
+              <h1 className="text-4xl font-bold">{college.name}</h1>
+              <p className="text-xl mt-2 opacity-90">{college.location}</p>
+            </div>
+          </div>
         </div>
 
-        {/* College Info */}
-        <div className="container mx-auto px-4 -mt-20 relative z-10">
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div>
-                <h1 className="text-3xl font-bold text-[#484848]">
-                  {college.name}
-                </h1>
-                <p className="text-[#484848] mt-2">{college.location}</p>
-              </div>
-              <div className="flex gap-4">
-                {isMember ? (
-                  <button
-                    disabled
-                    className="bg-[#7B0F119E] text-white px-6 py-2 rounded-lg cursor-not-allowed"
+        {/* 3-Column Layout */}
+        <div className="container mx-auto px-4 py-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left Sidebar - All Colleges */}
+            <div className="lg:col-span-3 order-3 lg:order-1">
+              <div className="bg-white rounded-lg shadow-sm p-4 sticky top-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-semibold text-[#484848]">
+                    All Colleges
+                  </h2>
+                  <Link
+                    to="/colleges"
+                    className="text-[#D43134C4] text-sm hover:underline"
                   >
-                    Joined
-                  </button>
-                ) : joinloading ? (
-                  <button
-                    disabled
-                    className="bg-[#D43134C4] text-white px-6 py-2 rounded-lg cursor-not-allowed"
-                  >
-                    <svg
-                      className="animate-spin h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8v8H4z"
-                      ></path>
-                    </svg>
-                  </button>
+                    View All
+                  </Link>
+                </div>
+
+                {collegesLoading ? (
+                  <div className="flex justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#D43134C4]"></div>
+                  </div>
                 ) : (
-                  <button
-                    onClick={handleJoin}
-                    className="bg-[#D43134C4] text-white px-6 py-2 rounded-lg hover:bg-[#7B0F119E] transition-colors"
-                  >
-                    Join
-                  </button>
+                  <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+                    {allColleges.map((col) => (
+                      <Link
+                        key={col._id}
+                        to={`/college/${col._id}`}
+                        className={`flex items-center p-2 rounded-md transition-colors ${
+                          col._id === college._id
+                            ? "bg-[#D43134C4]/10 border-l-4 border-[#D43134C4]"
+                            : "hover:bg-gray-100"
+                        }`}
+                      >
+                        <img
+                          src={
+                            col.profilePic || "https://via.placeholder.com/40"
+                          }
+                          alt={col.name}
+                          className="w-10 h-10 rounded-full object-cover mr-3"
+                        />
+                        <div>
+                          <h3 className="font-medium text-[#484848] text-sm">
+                            {col.name}
+                          </h3>
+                          <p className="text-gray-500 text-xs">
+                            {col.location}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
                 )}
-                <button
-                  onClick={handleShare}
-                  className="border border-[#D43134C4] text-[#D43134C4] px-6 py-2 rounded-lg hover:bg-[#D43134C4] hover:text-white transition-colors"
-                >
-                  {isCopied ? "Copied!" : "Share"}
-                </button>
               </div>
             </div>
 
-            {/* New: Create Post Button and Form */}
+            {/* Main Content - College Profile */}
+            <div className="lg:col-span-6 order-1 lg:order-2">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                {/* Action Buttons */}
+                <div className="flex justify-between items-center mb-6">
+                  <div className="flex items-center gap-2">
+                    <span className="bg-[#D43134C4]/10 text-[#D43134C4] px-3 py-1 rounded-full text-sm font-medium">
+                      {college.facts.type}
+                    </span>
+                    <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+                      Founded: {college.facts.founded}
+                    </span>
+                  </div>
+                  <div className="flex gap-3">
+                    {isMember ? (
+                      <button
+                        disabled
+                        className="bg-[#7B0F119E] text-white px-4 py-2 rounded-md cursor-not-allowed text-sm"
+                      >
+                        Joined
+                      </button>
+                    ) : joinloading ? (
+                      <button
+                        disabled
+                        className="bg-[#D43134C4] text-white px-4 py-2 rounded-md cursor-not-allowed text-sm"
+                      >
+                        <svg
+                          className="animate-spin h-5 w-5 text-white inline mr-1"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v8H4z"
+                          ></path>
+                        </svg>
+                        Joining...
+                      </button>
+                    ) : (
+                      <button
+                        onClick={handleJoin}
+                        className="bg-[#D43134C4] text-white px-4 py-2 rounded-md hover:bg-[#7B0F119E] transition-colors text-sm"
+                      >
+                        Join College
+                      </button>
+                    )}
+                    <button
+                      onClick={handleShare}
+                      className="border border-[#D43134C4] text-[#D43134C4] px-4 py-2 rounded-md hover:bg-[#D43134C4] hover:text-white transition-colors text-sm"
+                    >
+                      {isCopied ? "Link Copied!" : "Share"}
+                    </button>
+                  </div>
+                </div>
 
-            {/* Tabs */}
-            <div className="mt-8 border-b border-[#D43134C4]/20">
-              <div className="flex space-x-8">
-                {["description", "comments", "members"].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`pb-4 px-2 capitalize ${
-                      activeTab === tab
-                        ? "border-b-2 border-[#D43134C4] text-[#D43134C4]"
-                        : "text-[#484848]"
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
+                {/* Tabs */}
+                <div className="border-b border-gray-200 mb-6">
+                  <div className="flex space-x-6">
+                    {["description", "comments", "members"].map((tab) => (
+                      <button
+                        key={tab}
+                        onClick={() => setActiveTab(tab)}
+                        className={`pb-3 px-1 text-sm font-medium capitalize transition-colors ${
+                          activeTab === tab
+                            ? "border-b-2 border-[#D43134C4] text-[#D43134C4]"
+                            : "text-gray-600 hover:text-gray-900"
+                        }`}
+                      >
+                        {tab}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Tab Content */}
+                <div>{renderTabContent()}</div>
               </div>
             </div>
 
-            {/* Tab Content */}
-            <div className="mt-8">{renderTabContent()}</div>
+            {/* Right Sidebar - Student Mentors */}
+            <div className="lg:col-span-3 order-2 lg:order-3">
+              <div className="bg-white rounded-lg shadow-sm p-4 sticky top-4">
+                <h2 className="text-lg font-semibold text-[#484848] mb-4">
+                  Student Mentors
+                </h2>
+
+                {mentorsLoading ? (
+                  <div className="flex justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#D43134C4]"></div>
+                  </div>
+                ) : mentors.length > 0 ? (
+                  <div className="space-y-4">
+                    {mentors.map((mentor) => (
+                      <div
+                        key={mentor._id}
+                        className="flex items-start p-3 bg-gray-50 rounded-lg"
+                      >
+                        <img
+                          src={
+                            mentor.profilePic ||
+                            "https://api.dicebear.com/7.x/avataaars/svg?seed=Default"
+                          }
+                          alt={mentor.name}
+                          className="w-12 h-12 rounded-full border-2 border-[#D43134C4]/20 mr-3"
+                        />
+                        <div>
+                          <h3 className="font-medium text-[#484848]">
+                            {mentor.name}
+                          </h3>
+                          <p className="text-gray-500 text-sm">
+                            {mentor.major}
+                          </p>
+                          <div className="mt-1 flex items-center gap-1">
+                            <span className="bg-[#D43134C4]/10 text-[#D43134C4] px-2 py-0.5 rounded text-xs">
+                              {mentor.karma} karma
+                            </span>
+                            {mentor.isMentor && (
+                              <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded text-xs">
+                                Mentor
+                              </span>
+                            )}
+                          </div>
+                          <Link
+                            to={`/mentor/${mentor._id}`}
+                            className="text-[#D43134C4] text-xs hover:underline inline-block mt-1"
+                          >
+                            View Profile
+                          </Link>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-6 bg-gray-50 rounded-lg">
+                    <p className="text-gray-500 mb-2">
+                      No mentors available yet
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      Students with 500+ karma points become mentors
+                    </p>
+                  </div>
+                )}
+
+                {/* Display the number of members */}
+                <div className="mt-6 p-3 bg-gray-50 rounded-lg">
+                  <h3 className="font-medium text-[#484848] mb-2">
+                    Community Stats
+                  </h3>
+                  <div className="flex justify-between">
+                    <div className="text-center">
+                      <p className="text-xl font-bold text-[#D43134C4]">
+                        {college.members?.length || 0}
+                      </p>
+                      <p className="text-xs text-gray-500">Members</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xl font-bold text-[#D43134C4]">
+                        {posts.length}
+                      </p>
+                      <p className="text-xs text-gray-500">Discussions</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xl font-bold text-[#D43134C4]">
+                        {mentors.length}
+                      </p>
+                      <p className="text-xs text-gray-500">Mentors</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
       <Footer />
 
-      {/* Replies Drawer */}
+      {/* Replies Drawer - Keep as is */}
       {openDrawerPost && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/15 backdrop-blur-sm">
-          <div className="bg-white rounded-lg w-11/12 md:w-1/2 p-4 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-lg w-11/12 md:w-1/2 p-6 relative max-h-[80vh] overflow-y-auto">
             <button
               onClick={() => setOpenDrawerPost(null)}
-              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
             >
-              Close
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
             </button>
 
             {/* Display the selected post details */}
             {selectedPost && (
-              <div className="mb-4 border-b pb-4">
-                <h3 className="text-xl mb-2 font-semibold">Post Details</h3>
-                <div className="bg-gray-50 p-3 rounded border">
-                  <div className="flex items-center gap-2">
-                    {selectedPost.author.profilePic && (
-                      <img
-                        src={selectedPost.author.profilePic || "/user-icon.svg"}
-                        alt={selectedPost.author.name}
-                        className="w-8 h-8 rounded-full"
-                      />
-                    )}
-                    <h4 className="font-medium text-[#484848]">
-                      {selectedPost.author.name}
-                    </h4>
+              <div className="mb-6 border-b pb-4">
+                <h3 className="text-xl mb-3 font-semibold text-[#484848]">
+                  Post
+                </h3>
+                <div className="bg-gray-50 p-4 rounded-lg border">
+                  <div className="flex items-center gap-3 mb-2">
+                    <img
+                      src={
+                        selectedPost.author.profilePic ||
+                        "https://api.dicebear.com/7.x/avataaars/svg?seed=Default"
+                      }
+                      alt={selectedPost.author.name}
+                      className="w-10 h-10 rounded-full"
+                    />
+                    <div>
+                      <h4 className="font-medium text-[#484848]">
+                        {selectedPost.author.name}
+                      </h4>
+                      <p className="text-xs text-gray-500">
+                        {new Date(selectedPost.createdAt).toLocaleString()}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-sm text-[#484848] mt-2">
+                  <p className="text-sm text-[#484848]">
                     {selectedPost.content}
                   </p>
                 </div>
               </div>
             )}
 
-            <h3 className="text-xl mb-4 font-semibold">Replies</h3>
+            <h3 className="text-xl mb-4 font-semibold text-[#484848]">
+              Replies ({repliesByPost[openDrawerPost]?.length || 0})
+            </h3>
+
             {repliesByPost[openDrawerPost] &&
             repliesByPost[openDrawerPost].length > 0 ? (
-              <div className="space-y-2 max-h-80 overflow-y-auto">
+              <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
                 {repliesByPost[openDrawerPost].map((reply) => (
                   <div
                     key={reply._id}
-                    className="bg-gray-100 p-2 rounded border"
+                    className="bg-gray-50 p-3 rounded-lg border"
                   >
-                    <div className="flex flex-row items-center gap-2">
-                      {reply.author.profilePic && (
-                        <img
-                          src={reply.author.profilePic || "/user-icon.svg"}
-                          alt={reply.author.name}
-                          className="w-8 h-8 rounded-full"
-                        />
-                      )}
-                      <h4 className="font-light text-[#484848]">
-                        {reply.author.name}
-                      </h4>
+                    <div className="flex items-start gap-3">
+                      <img
+                        src={
+                          reply.author.profilePic ||
+                          "https://api.dicebear.com/7.x/avataaars/svg?seed=Default"
+                        }
+                        alt={reply.author.name}
+                        className="w-8 h-8 rounded-full mt-1"
+                      />
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <h4 className="font-medium text-[#484848] text-sm">
+                            {reply.author.name}
+                          </h4>
+                          <span className="text-xs text-gray-500">
+                            {new Date(reply.createdAt).toLocaleString()}
+                          </span>
+                        </div>
+                        <p className="text-sm text-[#484848] mt-1">
+                          {reply.content}
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-sm text-[#484848]">{reply.content}</p>
-                    <span className="text-xs text-gray-500">
-                      {new Date(reply.createdAt).toLocaleString()}
-                    </span>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-gray-600">No replies available.</p>
+              <div className="bg-gray-50 p-4 rounded-lg text-center">
+                <p className="text-gray-500">
+                  No replies yet. Be the first to reply!
+                </p>
+              </div>
+            )}
+
+            {/* Add Reply Form */}
+            {canReply && (
+              <form
+                onSubmit={(e) => handleReplySubmit(e, openDrawerPost)}
+                className="mt-6"
+              >
+                <textarea
+                  value={replyText[openDrawerPost] || ""}
+                  onChange={(e) =>
+                    handleReplyChange(openDrawerPost, e.target.value)
+                  }
+                  placeholder="Add your reply..."
+                  className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] resize-none"
+                  rows="3"
+                ></textarea>
+                <button
+                  type="submit"
+                  className="mt-2 bg-[#D43134C4] text-white px-4 py-2 rounded-md hover:bg-[#7B0F119E] transition-colors"
+                >
+                  Submit Reply
+                </button>
+              </form>
             )}
           </div>
         </div>

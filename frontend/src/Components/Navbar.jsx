@@ -30,10 +30,6 @@ const Navbar = () => {
             />
           </Link>
 
-          <div className="hidden md:block flex-1 max-w-md mx-8">
-            <SearchBar />
-          </div>
-
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/" className="text-[#484848] hover:text-[#D43134C4]">
               Home
@@ -77,40 +73,54 @@ const Navbar = () => {
             </button>
           </div>
 
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-[#484848] hover:text-[#D43134C4]"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <div className="md:hidden flex flex-row items-center space-x-2">
+            {/* Mobile User Profile Icon using user-icon.svg */}
+            {user && (
+              <Link
+                to={`/user/${user._id}`}
+                className="flex items-center hover:text-[#D43134C4] "
+              >
+                <img
+                  src="/user-icon.svg"
+                  alt="User Profile Icon"
+                  className="w-6 h-6 mr-2"
+                />
+              </Link>
+            )}
+
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden text-[#484848] hover:text-[#D43134C4]"
             >
-              {isMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                {isMenuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
 
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-[#D43134C4]/20">
             <div className="flex flex-col space-y-4">
-              <SearchBar />
-
               <Link
                 to="/"
                 className="text-[#484848] hover:text-[#D43134C4] px-2"
@@ -141,20 +151,6 @@ const Navbar = () => {
               >
                 Add College
               </Link>
-              {/* Mobile User Profile Icon using user-icon.svg */}
-              {user && (
-                <Link
-                  to={`/user/${user._id}`}
-                  className="flex items-center hover:text-[#D43134C4] px-2"
-                >
-                  <img
-                    src="/user-icon.svg"
-                    alt="User Profile Icon"
-                    className="w-6 h-6 mr-2"
-                  />
-                  Profile
-                </Link>
-              )}
 
               <button
                 className="bg-[#D43134C4] text-white px-4 py-2 rounded-lg hover:bg-[#7B0F119E] transition-colors w-full"
