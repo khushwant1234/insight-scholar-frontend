@@ -63,10 +63,12 @@ const CollegeProfile = () => {
           setCollege(data.college);
         } else {
           setCollege(null);
+          toast.error("Failed to fetch college data");
         }
       } catch (error) {
         console.error(error);
         setCollege(null);
+        toast.error("Failed to fetch college data");
       } finally {
         setLoading(false);
       }
@@ -86,10 +88,12 @@ const CollegeProfile = () => {
           setPosts(data.posts);
         } else {
           setPosts([]);
+          toast.error("No posts found");
         }
       } catch (error) {
         console.error(error);
         setPosts([]);
+        toast.error("Failed to fetch posts");
       }
     };
 
@@ -110,6 +114,7 @@ const CollegeProfile = () => {
       } catch (error) {
         console.error(error);
         setCollege(null);
+        toast.error("Failed to fetch college data");
       } finally {
         setJoinloading(false);
       }
@@ -128,6 +133,7 @@ const CollegeProfile = () => {
           setReplies(data.replies);
         } else {
           setReplies([]);
+          toast.error("No replies found");
         }
       } catch (error) {
         toast.error("Failed to fetch replies:", error);
@@ -153,6 +159,7 @@ const CollegeProfile = () => {
               data.success && data.replies ? data.replies : [];
           } catch (error) {
             repliesMap[post._id] = [];
+            toast.error("Failed to fetch replies for post:", error);
           }
         })
       );
@@ -198,6 +205,7 @@ const CollegeProfile = () => {
       }
     } catch (error) {
       console.error("Error fetching user upvotes:", error);
+      toast.error("Failed to fetch user upvotes");
     }
   };
 
@@ -381,9 +389,11 @@ const CollegeProfile = () => {
           setAllColleges(data.colleges);
         } else {
           setAllColleges([]);
+          toast.error("No colleges found");
         }
       } catch (error) {
         console.error("Failed to fetch colleges:", error);
+        toast.error("Failed to fetch colleges");
         setAllColleges([]);
       } finally {
         setCollegesLoading(false);
@@ -403,9 +413,11 @@ const CollegeProfile = () => {
           setMentors(data.mentors);
         } else {
           setMentors([]);
+          toast.error("No mentors found for this college");
         }
       } catch (error) {
         console.error("Failed to fetch mentors:", error);
+        toast.error("Failed to fetch mentors");
         setMentors([]);
       } finally {
         setMentorsLoading(false);
