@@ -53,10 +53,13 @@ const AddColleges = () => {
       },
     };
 
-    console.log(payload);
+    // console.log(payload);
     try {
       // Replace with your correct endpoint if needed
-      const data = await PostApiCall(`${backendUrl}/api/college`, payload);
+      const data = await PostApiCall(
+        `${backendUrl}/api/college/createCollege`,
+        payload
+      );
       if (data.success) {
         toast.success("College added successfully");
         // navigate("/");
