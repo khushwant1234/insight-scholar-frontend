@@ -814,13 +814,13 @@ const UserProfile = () => {
             </div>
 
             {/* Tabs - Ensure scrolling on mobile */}
-            <div className="px-4 sm:px-6 border-t border-gray-200 overflow-x-auto">
-              <div className="flex -mb-px min-w-max">
+            <div className="px-6 border-t border-gray-200">
+              <div className="flex -mb-px">
                 {["overview", "activity"].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`py-3 sm:py-4 px-4 sm:px-6 font-medium text-sm border-b-2 transition-colors ${
+                    className={`py-4 px-6 font-medium text-sm border-b-2 transition-colors ${
                       activeTab === tab
                         ? "border-indigo-600 text-indigo-600"
                         : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
