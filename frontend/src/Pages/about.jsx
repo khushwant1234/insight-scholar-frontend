@@ -58,7 +58,7 @@ const About = () => {
       name: "Khushwant Singh",
       role: "Developer",
       bio: "Full-stack engineer focused on creating platforms that scale.",
-      image: "https://via.placeholder.com/300",
+      image: "/khushwant.jpg",
       linkedin: "https://linkedin.com/in/singh-khushwant",
       github: "https://github.com/khushwant1234",
       email: "mailto:khushwantsingh638@gmail.com",
