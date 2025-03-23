@@ -1,5 +1,6 @@
 // config/constants.js
-export const API_BASE_URL = "http://localhost:8000/api";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+export const API_BASE_URL = `${backendUrl}`;
 
 export const API_ENDPOINTS = {
   UPLOAD: "/upload",

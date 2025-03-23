@@ -38,9 +38,7 @@ const CollegeProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await PostApiCall(
-          `http://localhost:8000/api/user/profile`
-        );
+        const response = await PostApiCall(`${backendUrl}/api/user/profile`);
         const { success, ...userData } = response;
         setUser(userData);
         // console.log(userData);
@@ -56,9 +54,7 @@ const CollegeProfile = () => {
     setLoading(true);
     const fetchCollege = async () => {
       try {
-        const data = await GetApiCall(
-          `http://localhost:8000/api/college/${id}`
-        );
+        const data = await GetApiCall(`${backendUrl}/api/college/${id}`);
         if (data.success && data.college) {
           setCollege(data.college);
         } else {
@@ -80,9 +76,7 @@ const CollegeProfile = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const data = await PostApiCall(
-          `http://localhost:8000/api/post/college/${id}`
-        );
+        const data = await PostApiCall(`${backendUrl}/api/post/college/${id}`);
         if (data.success && data.posts) {
           // console.log(data.posts);
           setPosts(data.posts);
@@ -103,9 +97,7 @@ const CollegeProfile = () => {
   useEffect(() => {
     const fetchCollege = async () => {
       try {
-        const data = await GetApiCall(
-          `http://localhost:8000/api/college/${id}`
-        );
+        const data = await GetApiCall(`${backendUrl}/api/college/${id}`);
         if (data.success && data.college) {
           setCollege(data.college);
         } else {
@@ -125,9 +117,7 @@ const CollegeProfile = () => {
   useEffect(() => {
     const fetchReplies = async () => {
       try {
-        const data = await PostApiCall(
-          `http://localhost:8000/api/reply/post/${id}`
-        );
+        const data = await PostApiCall(`${backendUrl}/api/reply/post/${id}`);
         if (data.success && data.replies) {
           // console.log(data.replies);
           setReplies(data.replies);
@@ -152,7 +142,7 @@ const CollegeProfile = () => {
         posts.map(async (post) => {
           try {
             const data = await PostApiCall(
-              `http://localhost:8000/api/reply/post/${post._id}`
+              `${backendUrl}/api/reply/post/${post._id}`
             );
             // console.log(data);
             repliesMap[post._id] =
@@ -238,10 +228,9 @@ const CollegeProfile = () => {
   const handleJoin = async () => {
     setJoinloading(true);
     try {
-      const data = await PutApiCall(
-        `http://localhost:8000/api/college/${id}/join`,
-        { userId: user._id }
-      );
+      const data = await PutApiCall(`${backendUrl}/api/college/${id}/join`, {
+        userId: user._id,
+      });
       if (data.success) {
         setCollege(data.college);
         toast.success("Joined college successfully!");
@@ -267,7 +256,7 @@ const CollegeProfile = () => {
     }
 
     try {
-      const data = await PostApiCall("http://localhost:8000/api/post", {
+      const data = await PostApiCall(`${backendUrl}/api/post`, {
         author: user._id,
         college: id,
         content: postContent,
@@ -306,7 +295,7 @@ const CollegeProfile = () => {
       return;
     }
     try {
-      const data = await PostApiCall("http://localhost:8000/api/reply", {
+      const data = await PostApiCall(`${backendUrl}/api/reply`, {
         author: user._id,
         post: postId,
         content: replyText[postId],
@@ -382,9 +371,7 @@ const CollegeProfile = () => {
   useEffect(() => {
     const fetchAllColleges = async () => {
       try {
-        const data = await GetApiCall(
-          "http://localhost:8000/api/college/allColleges"
-        );
+        const data = await GetApiCall(`${backendUrl}/api/college/allColleges`);
         if (data.success && data.colleges) {
           setAllColleges(data.colleges);
         } else {
@@ -407,7 +394,7 @@ const CollegeProfile = () => {
     const fetchMentors = async () => {
       try {
         const data = await GetApiCall(
-          `http://localhost:8000/api/college/${id}/mentors`
+          `${backendUrl}/api/college/${id}/mentors`
         );
         if (data.success && data.mentors) {
           setMentors(data.mentors);

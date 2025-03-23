@@ -71,7 +71,7 @@ const UserProfile = () => {
       const fetchCollege = async () => {
         try {
           const data = await GetApiCall(
-            `http://localhost:8000/api/college/${user.college}`
+            `${backendUrl}/api/college/${user.college}`
           );
           if (data.success && data.college) {
             setUserCollege(data.college);
