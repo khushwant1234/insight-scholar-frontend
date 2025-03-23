@@ -485,7 +485,7 @@ const CollegeProfile = () => {
             </div>
           </div>
         );
-      case "comments":
+      case "discussion":
         // {
         //   console.log(posts);
         // }
@@ -741,7 +741,7 @@ const CollegeProfile = () => {
             {college.members.map((member) => (
               <div
                 key={member._id || member.id}
-                className="bg-white p-4 rounded-lg shadow-sm border border-[#D43134C4]/20"
+                className="bg-white p-4 rounded-lg shadow-sm border border-[#D43134C4]/20 overflow-hidden"
               >
                 <div className="flex flex-row items-center gap-2">
                   {member.profilePic && (
@@ -751,7 +751,7 @@ const CollegeProfile = () => {
                       className="w-10 h-10 rounded-full mb-2"
                     />
                   )}
-                  <h4 className="font-medium text-[#484848]">{member.name}</h4>
+                  <h4 className="font-medium text-[#484848] ">{member.name}</h4>
                 </div>
 
                 {/* <p className="text-sm text-[#484848]">{member.year}</p>
@@ -774,7 +774,7 @@ const CollegeProfile = () => {
           <img
             src={
               college.profilePic ||
-              "https://via.placeholder.com/1200x300?text=College+Banner"
+              "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29sbGVnZXxlbnwwfHwwfHx8MA%3D%3D"
             }
             alt={college.name}
             className="w-full h-full object-cover"
@@ -826,7 +826,7 @@ const CollegeProfile = () => {
                           src={
                             col.profilePic || "https://via.placeholder.com/40"
                           }
-                          alt={col.name}
+                          alt={`.`}
                           className="w-10 h-10 rounded-full object-cover mr-3"
                         />
                         <div>
@@ -846,10 +846,10 @@ const CollegeProfile = () => {
 
             {/* Main Content - College Profile */}
             <div className="lg:col-span-6 order-1 lg:order-2">
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                {/* Action Buttons */}
-                <div className="flex justify-between items-center mb-6">
-                  <div className="flex items-center gap-2">
+              <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
+                {/* Action Buttons - Responsive layout */}
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="bg-[#D43134C4]/10 text-[#D43134C4] px-3 py-1 rounded-full text-sm font-medium">
                       {college.facts.type}
                     </span>
@@ -861,14 +861,14 @@ const CollegeProfile = () => {
                     {isMember ? (
                       <button
                         disabled
-                        className="bg-[#7B0F119E] text-white px-4 py-2 rounded-md cursor-not-allowed text-sm"
+                        className="bg-[#7B0F119E] text-white px-4 py-2 rounded-md cursor-not-allowed text-sm flex-1 sm:flex-none"
                       >
                         Joined
                       </button>
                     ) : joinloading ? (
                       <button
                         disabled
-                        className="bg-[#D43134C4] text-white px-4 py-2 rounded-md cursor-not-allowed text-sm"
+                        className="bg-[#D43134C4] text-white px-4 py-2 rounded-md cursor-not-allowed text-sm flex-1 sm:flex-none"
                       >
                         <svg
                           className="animate-spin h-5 w-5 text-white inline mr-1"
@@ -895,28 +895,28 @@ const CollegeProfile = () => {
                     ) : (
                       <button
                         onClick={handleJoin}
-                        className="bg-[#D43134C4] text-white px-4 py-2 rounded-md hover:bg-[#7B0F119E] transition-colors text-sm"
+                        className="bg-[#D43134C4] text-white px-4 py-2 rounded-md hover:bg-[#7B0F119E] transition-colors text-sm flex-1 sm:flex-none"
                       >
                         Join College
                       </button>
                     )}
                     <button
                       onClick={handleShare}
-                      className="border border-[#D43134C4] text-[#D43134C4] px-4 py-2 rounded-md hover:bg-[#D43134C4] hover:text-white transition-colors text-sm"
+                      className="border border-[#D43134C4] text-[#D43134C4] px-4 py-2 rounded-md hover:bg-[#D43134C4] hover:text-white transition-colors text-sm flex-1 sm:flex-none"
                     >
                       {isCopied ? "Link Copied!" : "Share"}
                     </button>
                   </div>
                 </div>
 
-                {/* Tabs */}
-                <div className="border-b border-gray-200 mb-6">
-                  <div className="flex space-x-6">
-                    {["description", "comments", "members"].map((tab) => (
+                {/* Tabs - Scrollable on mobile */}
+                <div className="border-b border-gray-200 mb-6 overflow-x-auto">
+                  <div className="flex space-x-6 min-w-max pb-1">
+                    {["description", "discussion", "members"].map((tab) => (
                       <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        className={`pb-3 px-1 text-sm font-medium capitalize transition-colors ${
+                        className={`pb-3 px-1 text-sm font-medium capitalize transition-colors whitespace-nowrap ${
                           activeTab === tab
                             ? "border-b-2 border-[#D43134C4] text-[#D43134C4]"
                             : "text-gray-600 hover:text-gray-900"
@@ -928,8 +928,8 @@ const CollegeProfile = () => {
                   </div>
                 </div>
 
-                {/* Tab Content */}
-                <div>{renderTabContent()}</div>
+                {/* Tab Content - Responsive padding */}
+                <div className="overflow-x-hidden">{renderTabContent()}</div>
               </div>
             </div>
 

@@ -13,7 +13,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 const collegeOptions = ["Shiv Nadar University", "IIT Delhi", "IIT Bombay"];
 
 const UpdateProfile = () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, setColleges } = useContext(UserContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -25,6 +25,36 @@ const UpdateProfile = () => {
     profilePic: "",
     interests: "",
   });
+  const [collegeOptions, setCollegeOptions] = useState([]);
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchColleges = async () => {
+      try {
+        const data = await GetApiCall(`${backendUrl}/api/college/allColleges`);
+        // Assuming API returns an object with a 'colleges' array or the array directly
+        // console.log(data.colleges);
+        // console.log(data.success);
+        if (data.success && data.colleges) {
+          // console.log("inside if in getColleges");
+          // setColleges(data.colleges);
+          setCollegeOptions(data.colleges); // Set fetched colleges in local state
+        } else {
+          // console.log("error in else");
+          // console.log(data);
+          toast.error("Failed to fetch colleges ");
+        }
+      } catch (error) {
+        // console.log("error in catch");
+        console.log(error);
+        toast.error("Failed to fetch colleges abc");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchColleges();
+  }, [setColleges]);
 
   useEffect(() => {
     setLoading(true);
@@ -132,12 +162,13 @@ const UpdateProfile = () => {
                 name="college"
                 value={formData.college}
                 onChange={handleChange}
-                className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#D43134C4]"
+                className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
               >
                 <option value="">Select College</option>
+                <option value="notInCollege">Not in College</option>
                 {collegeOptions.map((college) => (
-                  <option key={college} value={college}>
-                    {college}
+                  <option key={college._id} value={college._id}>
+                    {college.name}
                   </option>
                 ))}
               </select>
@@ -169,7 +200,7 @@ const UpdateProfile = () => {
                 name="linkedIn"
                 value={formData.linkedIn}
                 onChange={handleChange}
-                placeholder="https://..."
+                placeholder="https://www.linkedin.com/..."
                 className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#D43134C4]"
               />
             </div>
@@ -186,7 +217,9 @@ const UpdateProfile = () => {
               />
             </div>
             <div className="flex flex-col">
-              <label className="text-[#484848] font-medium">Interests</label>
+              <label className="text-[#484848] font-medium">
+                Interests (Seperated with comma ,)
+              </label>
               <input
                 type="text"
                 name="interests"

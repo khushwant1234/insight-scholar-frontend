@@ -296,7 +296,7 @@ const CollegeList = () => {
             </div>
           )}
 
-          {filteredColleges.length > 0 && (
+          {/* {filteredColleges.length > 0 && (
             <div className="mt-8 text-center text-gray-600">
               <p>
                 Don't see your college?{" "}
@@ -309,7 +309,7 @@ const CollegeList = () => {
                 .
               </p>
             </div>
-          )}
+          )} */}
         </div>
 
         <Footer />

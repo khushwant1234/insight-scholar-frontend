@@ -282,12 +282,12 @@ const Home = () => {
                           ? `${post.content.substring(0, 150)}...`
                           : post.content}
                       </p>
-                      <Link
+                      {/* <Link
                         to={`/college/${post.college?._id}/post/${post._id}`}
                         className="text-[#D43134C4] text-sm font-medium hover:underline"
                       >
                         Read more
-                      </Link>
+                      </Link> */}
                     </div>
 
                     {/* Bottom Info */}

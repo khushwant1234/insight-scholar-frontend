@@ -173,6 +173,22 @@ const UserProfile = () => {
     }
   };
 
+  // Add this function to handle toggling mentor status
+  const handleToggleMentor = async () => {
+    try {
+      const response = await PutApiCall(`${backendUrl}/api/user/toggle-mentor`);
+      if (response.success) {
+        setUser({ ...user, isMentor: false });
+        toast.success("You are no longer a mentor");
+      } else {
+        toast.error(response.message || "Failed to update mentor status");
+      }
+    } catch (error) {
+      toast.error("Error updating mentor status");
+      console.error(error);
+    }
+  };
+
   if (loading) {
     return (
       <FadeWrapper>
@@ -384,67 +400,134 @@ const UserProfile = () => {
         <Navbar />
         <div className="flex-1 container mx-auto px-4 py-8">
           {/* Profile Header */}
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div className="h-32 bg-[#D43134C4]/20"></div>
-            <div className="px-6 py-4 relative">
-              <div className="flex flex-col md:flex-row gap-6 items-center md:items-end">
-                <img
-                  src={user.profilePic || "/user-icon.svg"}
-                  alt={user.name}
-                  className="w-32 h-32 rounded-full border-4 border-white -mt-16"
-                />
-                <div className="flex-1 text-center md:text-left">
-                  <h1 className="text-3xl font-bold text-[#484848]">
-                    {user.name}
-                  </h1>
-                  <p className="text-[#484848]">
-                    {userCollege ? userCollege.name : "College Not Found"}
-                  </p>
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+            {/* Banner */}
+            <div className="h-32 bg-gradient-to-r from-[#D43134C4]/20 to-indigo-100"></div>
 
-                  <p className="text-[#484848]">
-                    {user.major} • {user.year}
-                  </p>
+            <div className="px-6 py-4 relative">
+              <div className="flex flex-col md:flex-row gap-6">
+                {/* Profile Image */}
+                <div className="flex-shrink-0">
+                  <img
+                    src={user.profilePic || "/user-icon.svg"}
+                    alt={user.name}
+                    className="w-32 h-32 rounded-full border-4 border-white shadow-md -mt-16 object-cover"
+                  />
                 </div>
-                <div className="flex flex-col items-center md:items-end gap-2">
-                  <a
-                    href="/update-profile"
-                    className="text-[#484848] hover:text-[#D43134C4]"
-                  >
-                    <img src="/icons/edit.svg" alt="Edit Profile" />
-                  </a>
+
+                {/* User Info */}
+                <div className="flex-1 text-center md:text-left mt-4 md:mt-0">
+                  <div className="flex flex-col md:flex-row md:items-center gap-2">
+                    <h1 className="text-3xl font-bold text-[#484848]">
+                      {user.name}
+                    </h1>
+
+                    {/* Mentor Badge */}
+                    {user && user.isMentor && (
+                      <div className="bg-indigo-100 px-3 py-1 rounded-full text-indigo-800 text-sm font-medium inline-block">
+                        Mentor
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="text-[#484848] mt-2">
+                    {userCollege ? userCollege.name : "Not in College"}
+                    {user.major && user.year && (
+                      <span>
+                        {" "}
+                        • {user.major} • {user.year}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* LinkedIn Link */}
+                  {user.linkedIn && (
+                    <a
+                      href={user.linkedIn}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#484848] hover:text-[#D43134C4] inline-flex items-center gap-1 mt-2"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                      </svg>
+                      LinkedIn
+                    </a>
+                  )}
                 </div>
-                <div className="flex flex-col items-center md:items-end gap-2">
+
+                {/* Actions */}
+                <div className="flex flex-wrap justify-center md:justify-end items-center gap-3 mt-4 md:mt-0">
+                  {/* Karma Points */}
                   <div className="bg-[#D43134C4]/10 px-4 py-2 rounded-lg">
                     <span className="text-[#D43134C4] font-bold">
                       {user.karma}
                     </span>
                     <span className="text-[#484848] ml-2">Karma Points</span>
                   </div>
-                  <div className="flex gap-3">
-                    <a
-                      href={user.linkedIn}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#484848] hover:text-[#D43134C4]"
+
+                  {/* Edit Profile */}
+                  <Link
+                    to="/update-profile"
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors flex items-center gap-2"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      <span className="capitalize">LinkedIn</span>
-                    </a>
-                  </div>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                      />
+                    </svg>
+                    Edit Profile
+                  </Link>
+
+                  {/* Mentor Resign Button */}
+                  {user && user.isMentor && (
+                    <button
+                      onClick={handleToggleMentor}
+                      className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors flex items-center gap-2"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                      Resign as Mentor
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
 
             {/* Tabs */}
-            <div className="px-6 border-t border-[#D43134C4]/20">
-              <div className="flex space-x-8">
+            <div className="border-t border-[#D43134C4]/20">
+              <div className="flex space-x-8 px-6">
                 {["overview", "activity"].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`py-4 px-2 capitalize ${
+                    className={`py-4 px-2 capitalize font-medium ${
                       activeTab === tab
                         ? "border-b-2 border-[#D43134C4] text-[#D43134C4]"
-                        : "text-[#484848]"
+                        : "text-[#484848] hover:text-[#D43134C4]/70"
                     }`}
                   >
                     {tab}
