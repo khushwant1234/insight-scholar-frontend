@@ -1,3 +1,4 @@
+import "../styles/animations.css";
 import React, { useState, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { PostApiCall, GetApiCall } from "../utils/apiCall";
@@ -148,12 +149,40 @@ const Auth = () => {
 
   return (
     <FadeWrapper>
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
-        <div className="w-full max-w-md p-6 bg-white rounded-2xl shadow-xl relative overflow-hidden">
-          {/* Background pattern decoration */}
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-indigo-100 rounded-full opacity-50"></div>
-          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-100 rounded-full opacity-50"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 relative overflow-hidden">
+        {/* Enhanced animated background elements */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          {/* Dot pattern */}
+          <div
+            className="absolute inset-0 opacity-[0.02]"
+            style={{
+              backgroundImage: "radial-gradient(#5a5a5a 1px, transparent 1px)",
+              backgroundSize: "30px 30px",
+            }}
+          ></div>
 
+          {/* More visible animated shapes with inline styles */}
+          <div
+            className="absolute -top-20 -left-20 w-96 h-96 bg-indigo-500"
+            style={{
+              opacity: "0.4",
+              animation: "float-slow 20s ease-in-out infinite",
+            }}
+          ></div>
+          <div
+            className="absolute top-1/2 -right-24 w-80 h-80 bg-blue-500"
+            style={{
+              opacity: "0.4",
+              animation: "float-reverse 25s ease-in-out infinite",
+            }}
+          ></div>
+          <div
+            className="absolute -bottom-32 left-1/3 w-64 h-64 bg-green-500 rounded-full animate-swirl"
+            style={{ opacity: "0.5" }}
+          ></div>
+        </div>
+
+        <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-sm border border-gray-100 relative z-10">
           <div className="relative z-10">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-gray-800">
@@ -168,9 +197,9 @@ const Auth = () => {
 
             {registrationSuccess ? (
               <div className="text-center">
-                <div className="w-20 h-20 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center">
+                <div className="w-16 h-16 mx-auto mb-6 bg-green-50 rounded-full flex items-center justify-center">
                   <svg
-                    className="w-10 h-10 text-green-600"
+                    className="w-8 h-8 text-green-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -194,7 +223,7 @@ const Auth = () => {
                 </p>
                 <button
                   onClick={() => handleResendVerification(registeredEmail)}
-                  className="bg-indigo-100 text-indigo-600 px-6 py-2 rounded-lg font-medium hover:bg-indigo-200 transition-colors inline-flex items-center gap-2"
+                  className="bg-indigo-50 text-indigo-600 px-6 py-2 rounded-md font-medium hover:bg-indigo-100 transition-colors inline-flex items-center gap-2"
                 >
                   <svg
                     className="w-4 h-4"
@@ -257,7 +286,7 @@ const Auth = () => {
                             value={signupForm.name}
                             onChange={handleSignupChange}
                             placeholder="John Doe"
-                            className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                             required
                           />
                         </div>
@@ -287,7 +316,7 @@ const Auth = () => {
                             name="college"
                             value={signupForm.college}
                             onChange={handleSignupChange}
-                            className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none bg-white"
+                            className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 appearance-none bg-white"
                           >
                             <option value="">Select College</option>
                             <option value="notInCollege">Not in College</option>
@@ -329,7 +358,7 @@ const Auth = () => {
                                 value={signupForm.major}
                                 onChange={handleSignupChange}
                                 placeholder="Computer Science"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                               />
                             </div>
                             <div className="space-y-1">
@@ -342,7 +371,7 @@ const Auth = () => {
                                 value={signupForm.year}
                                 onChange={handleSignupChange}
                                 placeholder="2025"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                               />
                             </div>
                           </div>
@@ -368,7 +397,7 @@ const Auth = () => {
                             value={signupForm.linkedIn}
                             onChange={handleSignupChange}
                             placeholder="linkedin.com/in/username"
-                            className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                           />
                         </div>
                       </div>
@@ -399,7 +428,7 @@ const Auth = () => {
                             value={signupForm.email}
                             onChange={handleSignupChange}
                             placeholder="you@example.com"
-                            className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                             required
                           />
                         </div>
@@ -431,7 +460,7 @@ const Auth = () => {
                             value={signupForm.password}
                             onChange={handleSignupChange}
                             placeholder="••••••••"
-                            className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                             required
                           />
                         </div>
@@ -465,7 +494,7 @@ const Auth = () => {
                             value={loginForm.email}
                             onChange={handleLoginChange}
                             placeholder="you@example.com"
-                            className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                             required
                           />
                         </div>
@@ -505,7 +534,7 @@ const Auth = () => {
                             value={loginForm.password}
                             onChange={handleLoginChange}
                             placeholder="••••••••"
-                            className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                             required
                           />
                         </div>
@@ -515,7 +544,7 @@ const Auth = () => {
 
                   <button
                     type="submit"
-                    className="w-full py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-md flex items-center justify-center gap-2"
+                    className="w-full py-2.5 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 transition-colors shadow-sm flex items-center justify-center gap-2"
                   >
                     {isSignup ? (
                       <>
