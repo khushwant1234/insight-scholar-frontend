@@ -13,7 +13,8 @@ const AddColleges = () => {
     profilePic: "",
     location: "",
     description: "",
-    domain: "", // New field for domains (comma-separated)
+    domain: "",
+    emailDomains: "", // Add this new field
     founded: "",
     totalStudents: "",
     type: "",
@@ -43,6 +44,9 @@ const AddColleges = () => {
       description: formData.description,
       domain: formData.domain
         ? formData.domain.split(",").map((item) => item.trim())
+        : [],
+      emailDomains: formData.emailDomains // Process this the same way as domains
+        ? formData.emailDomains.split(",").map((item) => item.trim())
         : [],
       facts: {
         founded: formData.founded ? Number(formData.founded) : undefined,
@@ -173,6 +177,29 @@ const AddColleges = () => {
               placeholder="e.g., Engineering, Science, Arts"
               className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
             />
+          </div>
+
+          {/* New input section for email domains */}
+          <div className="mb-4">
+            <label
+              htmlFor="emailDomains"
+              className="block text-gray-700 font-bold mb-2"
+            >
+              Email Domains (Comma-separated)
+            </label>
+            <input
+              type="text"
+              name="emailDomains"
+              id="emailDomains"
+              value={formData.emailDomains}
+              onChange={handleChange}
+              placeholder="e.g., harvard.edu, g.harvard.edu"
+              className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+            />
+            <p className="mt-1 text-sm text-gray-500">
+              Enter domains that belong to this college. Students must use these
+              email domains to verify their affiliation.
+            </p>
           </div>
 
           <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
