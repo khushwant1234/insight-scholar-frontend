@@ -93,6 +93,16 @@ const Navbar = () => {
               >
                 Mentors
               </Link>
+              <Link
+                to="/compare-colleges"
+                className={`text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors duration-200 py-1 border-b-2 ${
+                  isActive("/compare")
+                    ? "border-[#D43134] text-gray-900"
+                    : "border-transparent"
+                }`}
+              >
+                Compare
+              </Link>
             </div>
 
             <Link
@@ -225,6 +235,17 @@ const Navbar = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Mentors
+              </Link>
+              <Link
+                to="/compare-colleges"
+                className={`px-2 py-1.5 rounded-md ${
+                  isActive("/compare")
+                    ? "bg-gray-50 text-gray-900 font-medium"
+                    : "text-gray-600"
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Compare
               </Link>
               <div className="pt-2">
                 <Link

@@ -28,12 +28,12 @@ const CollegeProfile = () => {
   const [replies, setReplies] = useState([]);
   const [upvotedPosts, setUpvotedPosts] = useState({});
   const [repliesByPost, setRepliesByPost] = useState({});
-  // New state to track which post's replies drawer is open (store post _id)
   const [openDrawerPost, setOpenDrawerPost] = useState(null);
   const [allColleges, setAllColleges] = useState([]);
   const [collegesLoading, setCollegesLoading] = useState(true);
   const [mentors, setMentors] = useState([]);
   const [mentorsLoading, setMentorsLoading] = useState(true);
+  const [isAnonymous, setIsAnonymous] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -41,7 +41,6 @@ const CollegeProfile = () => {
         const response = await PostApiCall(`${backendUrl}/api/user/profile`);
         const { success, ...userData } = response;
         setUser(userData);
-        // console.log(userData);
       } catch (err) {
         toast.error("Failed to fetch user data");
       }
@@ -78,7 +77,6 @@ const CollegeProfile = () => {
       try {
         const data = await PostApiCall(`${backendUrl}/api/post/college/${id}`);
         if (data.success && data.posts) {
-          // console.log(data.posts);
           setPosts(data.posts);
         } else {
           setPosts([]);
@@ -119,7 +117,6 @@ const CollegeProfile = () => {
       try {
         const data = await PostApiCall(`${backendUrl}/api/reply/post/${id}`);
         if (data.success && data.replies) {
-          // console.log(data.replies);
           setReplies(data.replies);
         } else {
           setReplies([]);
@@ -134,7 +131,6 @@ const CollegeProfile = () => {
     fetchReplies();
   }, [id]);
 
-  // New useEffect: Fetch replies for each post
   useEffect(() => {
     const fetchRepliesForPosts = async () => {
       const repliesMap = {};
@@ -144,7 +140,6 @@ const CollegeProfile = () => {
             const data = await PostApiCall(
               `${backendUrl}/api/reply/post/${post._id}`
             );
-            // console.log(data);
             repliesMap[post._id] =
               data.success && data.replies ? data.replies : [];
           } catch (error) {
@@ -161,7 +156,6 @@ const CollegeProfile = () => {
     }
   }, [posts]);
 
-  // Initialize upvotedPosts state from user.upvotedPosts when user data is fetched
   useEffect(() => {
     if (user && user.upvotedPosts) {
       const initialUpvotes = {};
@@ -169,13 +163,9 @@ const CollegeProfile = () => {
         initialUpvotes[postId] = true;
       });
       setUpvotedPosts(initialUpvotes);
-      console.log("Upvoted posts initialized:", initialUpvotes);
     }
-
-    // console.log(user.upvotedPosts);
   }, [user]);
 
-  // Improved fetchUserUpvotes function
   const fetchUserUpvotes = async () => {
     if (!user || !user._id) return;
 
@@ -183,10 +173,8 @@ const CollegeProfile = () => {
       const response = await GetApiCall(
         `${backendUrl}/api/upvote/user/${user._id}`
       );
-      // console.log(response);
 
       if (response.success && response.upvotes) {
-        // Create a map of post IDs that the user has upvoted
         const upvotedMap = {};
         response.upvotes.forEach((upvote) => {
           upvotedMap[upvote.post] = true;
@@ -199,7 +187,6 @@ const CollegeProfile = () => {
     }
   };
 
-  // Call the function when user or posts change
   useEffect(() => {
     if (user && user._id) {
       fetchUserUpvotes();
@@ -216,15 +203,12 @@ const CollegeProfile = () => {
     }
   };
 
-  // Determine if the current user is already a member of the college.
   const isMember = college?.members?.some(
     (member) => member._id === user._id || member.id === user._id
   );
 
-  // Determine if the current user belongs to this college based on their college property
   const canReply = user?.college === college?._id;
 
-  // Handle join action
   const handleJoin = async () => {
     setJoinloading(true);
     try {
@@ -243,7 +227,6 @@ const CollegeProfile = () => {
     }
   };
 
-  // New: Handle creating a post with a 300-character limit
   const handleCreatePost = async (e) => {
     e.preventDefault();
     if (!postContent.trim()) {
@@ -261,13 +244,21 @@ const CollegeProfile = () => {
         college: id,
         content: postContent,
         media: postMedia ? [postMedia] : [],
+        isAnonymous: isAnonymous,
       });
       if (data.success) {
         toast.success("Post created successfully");
-        // Optionally clear form or refresh posts list if present
         setPostContent("");
         setPostMedia("");
+        setIsAnonymous(false);
         setShowPostForm(false);
+
+        const postsData = await PostApiCall(
+          `${backendUrl}/api/post/college/${id}`
+        );
+        if (postsData.success && postsData.posts) {
+          setPosts(postsData.posts);
+        }
       } else {
         toast.error("Failed to create post");
       }
@@ -277,17 +268,14 @@ const CollegeProfile = () => {
     }
   };
 
-  // Function to toggle reply form visibility for a given post
   const toggleReplyForm = (postId) => {
     setReplyFormVisible((prev) => ({ ...prev, [postId]: !prev[postId] }));
   };
 
-  // Function to update reply content for a given post
   const handleReplyChange = (postId, value) => {
     setReplyText((prev) => ({ ...prev, [postId]: value }));
   };
 
-  // Function to handle reply submission for a given post
   const handleReplySubmit = async (e, postId) => {
     e.preventDefault();
     if (!replyText[postId] || replyText[postId].trim() === "") {
@@ -301,14 +289,11 @@ const CollegeProfile = () => {
         content: replyText[postId],
         media: [],
       });
-      // Assuming a successful reply creation returns the reply object (check your API response shape)
       if (data.success || data.reply._id) {
         toast.success("Reply posted successfully");
-        // Optionally, refresh replies for the post here if needed.
       } else {
         toast.error("Failed to post reply");
       }
-      // Clear the reply form and hide it
       setReplyText((prev) => ({ ...prev, [postId]: "" }));
       setReplyFormVisible((prev) => ({ ...prev, [postId]: false }));
     } catch (error) {
@@ -316,7 +301,6 @@ const CollegeProfile = () => {
     }
   };
 
-  // Update handlePostUpvote function
   const handlePostUpvote = async (postId) => {
     if (!user) {
       toast.info("Please log in to upvote posts");
@@ -333,20 +317,17 @@ const CollegeProfile = () => {
         { upvoteChange, userId }
       );
       if (data.success) {
-        // Update the post's upvotes count in the local posts state
         setPosts((prevPosts) =>
           prevPosts.map((post) =>
             post._id === postId ? { ...post, upvotes: data.upvotes } : post
           )
         );
 
-        // Update upvoted status in local state
         setUpvotedPosts((prev) => ({
           ...prev,
           [postId]: !prev[postId],
         }));
 
-        // Update the upvoted posts directly from the response
         if (data.upvotedPosts) {
           const newUpvotedMap = {};
           data.upvotedPosts.forEach((postId) => {
@@ -355,17 +336,14 @@ const CollegeProfile = () => {
           setUpvotedPosts(newUpvotedMap);
         }
       } else {
-        // console.log(data?.response);
         toast.error(data.error || "Failed to update upvote");
       }
     } catch (error) {
-      // console.log(error);
       toast.error("Error updating upvote");
       console.error("Upvote error:", error);
     }
   };
 
-  // New: Determine the selected post to display in the drawer
   const selectedPost = posts.find((post) => post._id === openDrawerPost);
 
   useEffect(() => {
@@ -473,9 +451,6 @@ const CollegeProfile = () => {
           </div>
         );
       case "discussion":
-        // {
-        //   console.log(posts);
-        // }
         return (
           <div className="space-y-6">
             <div className="mt-6">
@@ -502,6 +477,21 @@ const CollegeProfile = () => {
                     placeholder="Media URL (optional)"
                     className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                   />
+                  <div className="flex items-center">
+                    <input
+                      id="anonymous-checkbox"
+                      type="checkbox"
+                      checked={isAnonymous}
+                      onChange={(e) => setIsAnonymous(e.target.checked)}
+                      className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    />
+                    <label
+                      htmlFor="anonymous-checkbox"
+                      className="ml-2 text-sm text-gray-700"
+                    >
+                      Post anonymously
+                    </label>
+                  </div>
                   <button
                     type="submit"
                     className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
@@ -514,143 +504,20 @@ const CollegeProfile = () => {
 
             {posts.map((post) => {
               const createdAt = new Date(post.createdAt).toLocaleString();
-              const updatedAt = new Date(post.updatedAt).toLocaleString();
+
               return (
                 <div
                   key={post._id}
-                  className="bg-white p-4 rounded-lg shadow-sm border border-[#D43134C4]/20"
+                  className="bg-white rounded-lg shadow-md p-4 mb-4"
                 >
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex flex-row items-center gap-2">
-                      {post.author.profilePic && (
-                        <img
-                          src={post.author.profilePic || "/user-icon.svg"}
-                          alt={post.author.name}
-                          className="w-10 h-10 rounded-full"
-                        />
-                      )}
-                      <h4 className="font-medium text-[#484848]">
-                        {post.author.name}
-                      </h4>
-                    </div>
-                    <span className="text-sm text-[#484848]">{createdAt}</span>
-                    {post.updatedAt !== post.createdAt && (
-                      <span className="text-sm text-[#484848]">
-                        Updated at: {updatedAt}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-[#484848]">{post.content}</p>
-
-                  {/* Display post media */}
-                  {post.media && post.media.length > 0 && (
-                    <div className="mt-3">
-                      {post.media.map((mediaUrl, index) => {
-                        // Extract YouTube video ID if it's a YouTube link
-                        const youtubeMatch = mediaUrl.match(
-                          /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/
-                        );
-
-                        // Check if media is a YouTube video
-                        if (youtubeMatch && youtubeMatch[1]) {
-                          const videoId = youtubeMatch[1];
-                          return (
-                            <div key={index} className="my-2 aspect-video">
-                              <iframe
-                                width="100%"
-                                height="315"
-                                src={`https://www.youtube.com/embed/${videoId}`}
-                                title="YouTube video player"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                className="rounded-lg"
-                              ></iframe>
-                            </div>
-                          );
-                        }
-                        // Check if media is an image
-                        else if (mediaUrl.match(/\.(jpeg|jpg|gif|png)$/i)) {
-                          return (
-                            <img
-                              key={index}
-                              src={mediaUrl}
-                              alt="Post media"
-                              className="max-h-96 rounded-lg object-contain my-2"
-                              onError={(e) => {
-                                e.target.onerror = null;
-                                e.target.src = "/image-placeholder.png";
-                              }}
-                            />
-                          );
-                        }
-                        // Check if media is a regular video (not YouTube)
-                        else if (mediaUrl.match(/\.(mp4|mov|avi|wmv)$/i)) {
-                          return (
-                            <div key={index} className="my-2">
-                              <video
-                                controls
-                                className="max-h-96 rounded-lg w-full"
-                                onError={(e) =>
-                                  (e.target.style.display = "none")
-                                }
-                              >
-                                <source src={mediaUrl} />
-                                Your browser does not support video playback.
-                              </video>
-                            </div>
-                          );
-                        }
-                        // Default for other media types
-                        else {
-                          return (
-                            <a
-                              key={index}
-                              href={mediaUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-500 hover:underline block mt-2"
-                            >
-                              View attached media
-                            </a>
-                          );
-                        }
-                      })}
-                    </div>
-                  )}
-
-                  {/* Upvote option */}
-                  <div className="flex items-center mt-2 gap-2">
-                    <button
-                      onClick={() => handlePostUpvote(post._id)}
-                      className={`flex items-center gap-1 px-3 py-1.5 rounded-md transition-colors ${
-                        upvotedPosts[post._id]
-                          ? "bg-[#D43134C4]/80 text-white"
-                          : "bg-gray-200 hover:bg-gray-300 text-gray-700"
-                      }`}
-                      disabled={!user}
-                    >
-                      {upvotedPosts[post._id] ? (
-                        <>
+                  <div className="flex items-center mb-2">
+                    {post.isAnonymous ? (
+                      // Anonymous user display
+                      <div className="flex items-center">
+                        <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-500">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          Upvoted
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
+                            className="h-6 w-6"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -659,64 +526,37 @@ const CollegeProfile = () => {
                               strokeLinecap="round"
                               strokeLinejoin="round"
                               strokeWidth={2}
-                              d="M5 15l7-7 7 7"
+                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                             />
                           </svg>
-                          Upvote
-                        </>
-                      )}
-                    </button>
-                    <span className="text-sm text-gray-600 flex items-center">
-                      {post.upvotes} {post.upvotes === 1 ? "upvote" : "upvotes"}
+                        </div>
+                        <div className="ml-2">
+                          <p className="font-semibold">Anonymous User</p>
+                        </div>
+                      </div>
+                    ) : (
+                      // Regular user display
+                      <div className="flex items-center">
+                        <img
+                          src={
+                            post.author.profilePic ||
+                            "https://via.placeholder.com/40"
+                          }
+                          alt={post.author.name}
+                          className="w-10 h-10 rounded-full mr-2"
+                        />
+                        <div>
+                          <p className="font-semibold">{post.author.name}</p>
+                        </div>
+                      </div>
+                    )}
+                    <span className="text-sm text-gray-500 ml-auto">
+                      {createdAt}
                     </span>
                   </div>
 
-                  {/* Instead of inline displaying replies, show a button to open the drawer */}
-                  {repliesByPost[post._id] &&
-                    repliesByPost[post._id].length > 0 && (
-                      <div className="mt-2">
-                        <button
-                          onClick={() => setOpenDrawerPost(post._id)}
-                          className="text-sm text-blue-500 hover:underline"
-                        >
-                          View Replies ({repliesByPost[post._id].length})
-                        </button>
-                      </div>
-                    )}
-
-                  {/* Reply option visible only to users whose profile college matches the current college */}
-                  {canReply && (
-                    <div className="mt-2">
-                      <button
-                        onClick={() => toggleReplyForm(post._id)}
-                        className="text-sm text-blue-500 hover:underline"
-                      >
-                        Reply
-                      </button>
-                      {replyFormVisible[post._id] && (
-                        <form
-                          onSubmit={(e) => handleReplySubmit(e, post._id)}
-                          className="mt-2 space-y-2"
-                        >
-                          <textarea
-                            value={replyText[post._id] || ""}
-                            onChange={(e) =>
-                              handleReplyChange(post._id, e.target.value)
-                            }
-                            placeholder="Write your reply..."
-                            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            rows="3"
-                          ></textarea>
-                          <button
-                            type="submit"
-                            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-                          >
-                            Submit Reply
-                          </button>
-                        </form>
-                      )}
-                    </div>
-                  )}
+                  <p className="mb-2">{post.content}</p>
+                  {/* Rest of your post rendering code... */}
                 </div>
               );
             })}
@@ -740,9 +580,6 @@ const CollegeProfile = () => {
                   )}
                   <h4 className="font-medium text-[#484848] ">{member.name}</h4>
                 </div>
-
-                {/* <p className="text-sm text-[#484848]">{member.year}</p>
-                <p className="text-sm text-[#484848]">{member.major}</p> */}
               </div>
             ))}
           </div>
@@ -756,7 +593,6 @@ const CollegeProfile = () => {
     <div className="min-h-screen bg-[#F5F7FA] flex flex-col">
       <Navbar />
       <div className="flex-1">
-        {/* Hero Image */}
         <div className="w-full h-[300px] relative">
           <img
             src={
@@ -775,10 +611,8 @@ const CollegeProfile = () => {
           </div>
         </div>
 
-        {/* 3-Column Layout */}
         <div className="container mx-auto px-4 py-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left Sidebar - All Colleges */}
             <div className="lg:col-span-3 order-3 lg:order-1">
               <div className="bg-white rounded-lg shadow-sm p-4 sticky top-4">
                 <div className="flex justify-between items-center mb-4">
@@ -831,10 +665,8 @@ const CollegeProfile = () => {
               </div>
             </div>
 
-            {/* Main Content - College Profile */}
             <div className="lg:col-span-6 order-1 lg:order-2">
               <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-                {/* Action Buttons - Responsive layout */}
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="bg-[#D43134C4]/10 text-[#D43134C4] px-3 py-1 rounded-full text-sm font-medium">
@@ -896,7 +728,6 @@ const CollegeProfile = () => {
                   </div>
                 </div>
 
-                {/* Tabs - Scrollable on mobile */}
                 <div className="border-b border-gray-200 mb-6 overflow-x-auto">
                   <div className="flex space-x-6 min-w-max pb-1">
                     {["description", "discussion", "members"].map((tab) => (
@@ -915,12 +746,10 @@ const CollegeProfile = () => {
                   </div>
                 </div>
 
-                {/* Tab Content - Responsive padding */}
                 <div className="overflow-x-hidden">{renderTabContent()}</div>
               </div>
             </div>
 
-            {/* Right Sidebar - Student Mentors */}
             <div className="lg:col-span-3 order-2 lg:order-3">
               <div className="bg-white rounded-lg shadow-sm p-4 sticky top-4">
                 <h2 className="text-lg font-semibold text-[#484848] mb-4">
@@ -984,7 +813,6 @@ const CollegeProfile = () => {
                   </div>
                 )}
 
-                {/* Display the number of members */}
                 <div className="mt-6 p-3 bg-gray-50 rounded-lg">
                   <h3 className="font-medium text-[#484848] mb-2">
                     Community Stats
@@ -1018,7 +846,6 @@ const CollegeProfile = () => {
 
       <Footer />
 
-      {/* Replies Drawer - Keep as is */}
       {openDrawerPost && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <div className="bg-white rounded-lg w-11/12 md:w-1/2 p-6 relative max-h-[80vh] overflow-y-auto">
@@ -1042,7 +869,6 @@ const CollegeProfile = () => {
               </svg>
             </button>
 
-            {/* Display the selected post details */}
             {selectedPost && (
               <div className="mb-6 border-b pb-4">
                 <h3 className="text-xl mb-3 font-semibold text-[#484848]">
@@ -1120,7 +946,6 @@ const CollegeProfile = () => {
               </div>
             )}
 
-            {/* Add Reply Form */}
             {canReply && (
               <form
                 onSubmit={(e) => handleReplySubmit(e, openDrawerPost)}

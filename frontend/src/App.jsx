@@ -26,6 +26,7 @@ import { AnimatePresence } from "framer-motion";
 import MentorProfile from "./Pages/MentorProfile.jsx";
 import PageNotFound from "./Components/PageNotFound.jsx";
 import VerifyEmail from "./Pages/VerifyEmail.jsx";
+import CollegeComparison from "./Pages/CollegeComparison.jsx";
 // import FadeWrapper from "./Components/fadeIn.jsx";
 
 const PrivateRoute = ({ element }) => {
@@ -133,6 +134,10 @@ const AnimatedRoutes = () => {
           element={<PrivateRoute element={<HelpCenter />} />}
         />
         <Route path="/mentor/:id" element={<MentorProfile />} />
+        <Route
+          path="/compare-colleges"
+          element={<PrivateRoute element={<CollegeComparison />} />}
+        />
 
         {/* Add this catch-all route at the end */}
         <Route path="*" element={<PageNotFound />} />

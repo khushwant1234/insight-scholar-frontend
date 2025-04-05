@@ -39,6 +39,12 @@ const Footer = () => {
               >
                 College Directory
               </Link>
+              <Link
+                to="/compare-colleges"
+                className="text-[#484848] hover:text-[#D43134C4]"
+              >
+                Compare-Colleges
+              </Link>
             </div>
           </div>
 

@@ -184,8 +184,23 @@ const LiveChat = () => {
     </div>
   );
 
-  // Helper function to render messages
+  // Helper function to render messages or background image when empty
   function renderMessages() {
+    if (messages.length === 0) {
+      return (
+        <div className="h-full flex flex-col items-center justify-center p-4">
+          <img
+            src="/education2.jpg"
+            alt="Education Chat Background"
+            className="max-h-40 opacity-50 mb-3 rounded-lg object-cover"
+          />
+          <p className="text-center text-gray-500 text-sm">
+            No messages yet. Start the conversation!
+          </p>
+        </div>
+      );
+    }
+
     return messages.map((msg, index) => (
       <div
         key={msg._id || index}
