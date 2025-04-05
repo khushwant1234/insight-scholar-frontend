@@ -21,7 +21,8 @@ const CollegeProfile = () => {
   const [joinloading, setJoinloading] = useState(false);
   const [showPostForm, setShowPostForm] = useState(false);
   const [postContent, setPostContent] = useState("");
-  const [postMedia, setPostMedia] = useState("");
+  const [postMedia, setPostMedia] = useState([]); // Changed to array
+  const [currentMediaInput, setCurrentMediaInput] = useState(""); // Added new state for input field
   const [posts, setPosts] = useState([]);
   const [replyFormVisible, setReplyFormVisible] = useState({});
   const [replyText, setReplyText] = useState({});
@@ -243,13 +244,15 @@ const CollegeProfile = () => {
         author: user._id,
         college: id,
         content: postContent,
-        media: postMedia ? [postMedia] : [],
+        media: postMedia, // Now directly sending the array
         isAnonymous: isAnonymous,
       });
+
       if (data.success) {
         toast.success("Post created successfully");
         setPostContent("");
-        setPostMedia("");
+        setPostMedia([]); // Reset to empty array
+        setCurrentMediaInput(""); // Clear the input field
         setIsAnonymous(false);
         setShowPostForm(false);
 
@@ -266,6 +269,21 @@ const CollegeProfile = () => {
       toast.error("Error creating post");
       console.error("Create post error:", error);
     }
+  };
+
+  const addMediaUrl = () => {
+    if (currentMediaInput.trim() === "") {
+      toast.error("Please enter a valid media URL");
+      return;
+    }
+
+    // Add URL to the array
+    setPostMedia([...postMedia, currentMediaInput.trim()]);
+    setCurrentMediaInput(""); // Clear input field
+  };
+
+  const removeMediaUrl = (indexToRemove) => {
+    setPostMedia(postMedia.filter((_, index) => index !== indexToRemove));
   };
 
   const toggleReplyForm = (postId) => {
@@ -470,13 +488,63 @@ const CollegeProfile = () => {
                     className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     rows="4"
                   ></textarea>
-                  <input
-                    type="text"
-                    value={postMedia}
-                    onChange={(e) => setPostMedia(e.target.value)}
-                    placeholder="Media URL (optional)"
-                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                  />
+                  <div className="flex items-center space-x-2 mb-2">
+                    <input
+                      type="text"
+                      value={currentMediaInput}
+                      onChange={(e) => setCurrentMediaInput(e.target.value)}
+                      placeholder="Enter media URL (image or video)"
+                      className="flex-grow p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={addMediaUrl}
+                      className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+                    >
+                      Add Media
+                    </button>
+                  </div>
+
+                  {/* Display list of added media URLs */}
+                  {postMedia.length > 0 && (
+                    <div className="mb-4">
+                      <p className="text-sm font-medium text-gray-700 mb-2">
+                        Added Media:
+                      </p>
+                      <ul className="space-y-2">
+                        {postMedia.map((url, index) => (
+                          <li
+                            key={index}
+                            className="flex items-center justify-between bg-gray-50 p-2 rounded-md"
+                          >
+                            <span className="text-sm text-gray-600 truncate max-w-xs">
+                              {url}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => removeMediaUrl(index)}
+                              className="text-red-500 hover:text-red-700"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M6 18L18 6M6 6l12 12"
+                                />
+                              </svg>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                   <div className="flex items-center">
                     <input
                       id="anonymous-checkbox"
@@ -538,10 +606,7 @@ const CollegeProfile = () => {
                       // Regular user display
                       <div className="flex items-center">
                         <img
-                          src={
-                            post.author.profilePic ||
-                            "https://via.placeholder.com/40"
-                          }
+                          src={post.author.profilePic || "/user-icon.svg"}
                           alt={post.author.name}
                           className="w-10 h-10 rounded-full mr-2"
                         />
@@ -556,7 +621,119 @@ const CollegeProfile = () => {
                   </div>
 
                   <p className="mb-2">{post.content}</p>
-                  {/* Rest of your post rendering code... */}
+
+                  {/* Display post media */}
+                  {post.media && post.media.length > 0 && (
+                    <div className="mt-3 space-y-2">
+                      {post.media.map((mediaUrl, index) => {
+                        // Check if it's an image URL
+                        const isImage = /\.(jpeg|jpg|gif|png|webp)$/i.test(
+                          mediaUrl
+                        );
+
+                        return isImage ? (
+                          <img
+                            key={index}
+                            src={mediaUrl}
+                            alt="Post media"
+                            className="rounded-lg max-h-96 w-auto"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src =
+                                "https://via.placeholder.com/400x300?text=Image+Not+Available";
+                            }}
+                          />
+                        ) : (
+                          // If not an image, show as a clickable link
+                          <a
+                            key={index}
+                            href={mediaUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block bg-gray-100 p-3 rounded-lg text-blue-600 hover:bg-gray-200"
+                          >
+                            <div className="flex items-center">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5 mr-2"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                                />
+                              </svg>
+                              View Media
+                            </div>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Add this section for viewing replies/comments */}
+                  <div className="mt-4 pt-3 border-t border-gray-200 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handlePostUpvote(post._id)}
+                        className={`flex items-center gap-1 text-sm px-2 py-1 rounded-md ${
+                          upvotedPosts[post._id]
+                            ? "bg-red-50 text-red-600"
+                            : "hover:bg-gray-100 text-gray-600"
+                        }`}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 15l7-7 7 7"
+                          />
+                        </svg>
+                        {post.upvotes || 0}
+                      </button>
+
+                      <button
+                        onClick={() => setOpenDrawerPost(post._id)}
+                        className="flex items-center gap-1 text-sm px-2 py-1 rounded-md hover:bg-gray-100 text-gray-600"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                          />
+                        </svg>
+                        {repliesByPost[post._id]?.length || 0} Replies
+                      </button>
+                    </div>
+
+                    {canReply && (
+                      <button
+                        onClick={() => setOpenDrawerPost(post._id)}
+                        className="text-sm text-[#D43134C4] hover:text-[#7B0F119E] font-medium"
+                      >
+                        Reply
+                      </button>
+                    )}
+                  </div>
                 </div>
               );
             })}
@@ -876,26 +1053,100 @@ const CollegeProfile = () => {
                 </h3>
                 <div className="bg-gray-50 p-4 rounded-lg border">
                   <div className="flex items-center gap-3 mb-2">
-                    <img
-                      src={
-                        selectedPost.author.profilePic ||
-                        "https://api.dicebear.com/7.x/avataaars/svg?seed=Default"
-                      }
-                      alt={selectedPost.author.name}
-                      className="w-10 h-10 rounded-full"
-                    />
+                    {selectedPost.isAnonymous ? (
+                      <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-500">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                          />
+                        </svg>
+                      </div>
+                    ) : (
+                      <img
+                        src={
+                          selectedPost.author.profilePic ||
+                          "https://api.dicebear.com/7.x/avataaars/svg?seed=Default"
+                        }
+                        alt={selectedPost.author.name}
+                        className="w-10 h-10 rounded-full"
+                      />
+                    )}
                     <div>
                       <h4 className="font-medium text-[#484848]">
-                        {selectedPost.author.name}
+                        {selectedPost.isAnonymous
+                          ? "Anonymous User"
+                          : selectedPost.author.name}
                       </h4>
                       <p className="text-xs text-gray-500">
                         {new Date(selectedPost.createdAt).toLocaleString()}
                       </p>
                     </div>
                   </div>
-                  <p className="text-sm text-[#484848]">
+                  <p className="text-sm text-[#484848] mb-3">
                     {selectedPost.content}
                   </p>
+
+                  {/* Add media display */}
+                  {selectedPost.media && selectedPost.media.length > 0 && (
+                    <div className="mt-4 space-y-3">
+                      {selectedPost.media.map((mediaUrl, index) => {
+                        // Check if it's an image URL
+                        const isImage = /\.(jpeg|jpg|gif|png|webp)$/i.test(
+                          mediaUrl
+                        );
+
+                        return isImage ? (
+                          <img
+                            key={index}
+                            src={mediaUrl}
+                            alt="Post media"
+                            className="rounded-lg max-w-full h-auto max-h-96"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src =
+                                "https://via.placeholder.com/400x300?text=Image+Not+Available";
+                            }}
+                          />
+                        ) : (
+                          // If not an image, show as a clickable link
+                          <a
+                            key={index}
+                            href={mediaUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block bg-gray-100 p-3 rounded-lg text-blue-600 hover:bg-gray-200"
+                          >
+                            <div className="flex items-center">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5 mr-2"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                                />
+                              </svg>
+                              View Media
+                            </div>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -914,10 +1165,7 @@ const CollegeProfile = () => {
                   >
                     <div className="flex items-start gap-3">
                       <img
-                        src={
-                          reply.author.profilePic ||
-                          "https://api.dicebear.com/7.x/avataaars/svg?seed=Default"
-                        }
+                        src={reply.author.profilePic || "/user-icon.svg"}
                         alt={reply.author.name}
                         className="w-8 h-8 rounded-full mt-1"
                       />
