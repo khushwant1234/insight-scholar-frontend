@@ -14,10 +14,17 @@ const AddColleges = () => {
     location: "",
     description: "",
     domain: "",
-    emailDomains: "", // Add this new field
+    emailDomains: "",
     founded: "",
     totalStudents: "",
     type: "",
+    safety: "",
+    healthcare: "",
+    qualityOfTeaching: "",
+    campusCulture: "",
+    studentSupport: "",
+    affordability: "",
+    placements: "",
   });
 
   const handleChange = (e) => {
@@ -45,7 +52,7 @@ const AddColleges = () => {
       domain: formData.domain
         ? formData.domain.split(",").map((item) => item.trim())
         : [],
-      emailDomains: formData.emailDomains // Process this the same way as domains
+      emailDomains: formData.emailDomains
         ? formData.emailDomains.split(",").map((item) => item.trim())
         : [],
       facts: {
@@ -55,9 +62,29 @@ const AddColleges = () => {
           : undefined,
         type: formData.type,
       },
+      metrics: {
+        safety: formData.safety ? Number(formData.safety) : undefined,
+        healthcare: formData.healthcare
+          ? Number(formData.healthcare)
+          : undefined,
+        qualityOfTeaching: formData.qualityOfTeaching
+          ? Number(formData.qualityOfTeaching)
+          : undefined,
+        campusCulture: formData.campusCulture
+          ? Number(formData.campusCulture)
+          : undefined,
+        studentSupport: formData.studentSupport
+          ? Number(formData.studentSupport)
+          : undefined,
+        affordability: formData.affordability
+          ? Number(formData.affordability)
+          : undefined,
+        placements: formData.placements
+          ? Number(formData.placements)
+          : undefined,
+      },
     };
 
-    // console.log(payload);
     try {
       // Replace with your correct endpoint if needed
       const data = await PostApiCall(
@@ -160,7 +187,6 @@ const AddColleges = () => {
             ></textarea>
           </div>
 
-          {/* New input section for domain */}
           <div className="mb-4">
             <label
               htmlFor="domain"
@@ -179,7 +205,6 @@ const AddColleges = () => {
             />
           </div>
 
-          {/* New input section for email domains */}
           <div className="mb-4">
             <label
               htmlFor="emailDomains"
@@ -253,6 +278,179 @@ const AddColleges = () => {
                 placeholder="Public/Private"
                 className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
               />
+            </div>
+          </div>
+
+          <div className="mb-6 mt-8">
+            <h2 className="text-xl font-bold text-gray-700 mb-4 border-b pb-2">
+              College Metrics
+            </h2>
+            <p className="text-sm text-gray-500 mb-4">
+              Rate each metric on a scale of 1-5 (1 being the lowest, 5 being
+              the highest)
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label
+                  htmlFor="safety"
+                  className="block text-gray-700 font-bold mb-2"
+                >
+                  Safety
+                </label>
+                <select
+                  name="safety"
+                  id="safety"
+                  value={formData.safety}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+                >
+                  <option value="">Select Rating</option>
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <option key={num} value={num}>
+                      {num}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="healthcare"
+                  className="block text-gray-700 font-bold mb-2"
+                >
+                  Healthcare
+                </label>
+                <select
+                  name="healthcare"
+                  id="healthcare"
+                  value={formData.healthcare}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+                >
+                  <option value="">Select Rating</option>
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <option key={num} value={num}>
+                      {num}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="qualityOfTeaching"
+                  className="block text-gray-700 font-bold mb-2"
+                >
+                  Quality of Teaching
+                </label>
+                <select
+                  name="qualityOfTeaching"
+                  id="qualityOfTeaching"
+                  value={formData.qualityOfTeaching}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+                >
+                  <option value="">Select Rating</option>
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <option key={num} value={num}>
+                      {num}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="campusCulture"
+                  className="block text-gray-700 font-bold mb-2"
+                >
+                  Campus Culture
+                </label>
+                <select
+                  name="campusCulture"
+                  id="campusCulture"
+                  value={formData.campusCulture}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+                >
+                  <option value="">Select Rating</option>
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <option key={num} value={num}>
+                      {num}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="studentSupport"
+                  className="block text-gray-700 font-bold mb-2"
+                >
+                  Student Support
+                </label>
+                <select
+                  name="studentSupport"
+                  id="studentSupport"
+                  value={formData.studentSupport}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+                >
+                  <option value="">Select Rating</option>
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <option key={num} value={num}>
+                      {num}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="affordability"
+                  className="block text-gray-700 font-bold mb-2"
+                >
+                  Affordability
+                </label>
+                <select
+                  name="affordability"
+                  id="affordability"
+                  value={formData.affordability}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+                >
+                  <option value="">Select Rating</option>
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <option key={num} value={num}>
+                      {num}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="placements"
+                  className="block text-gray-700 font-bold mb-2"
+                >
+                  Placements
+                </label>
+                <select
+                  name="placements"
+                  id="placements"
+                  value={formData.placements}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+                >
+                  <option value="">Select Rating</option>
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <option key={num} value={num}>
+                      {num}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
 

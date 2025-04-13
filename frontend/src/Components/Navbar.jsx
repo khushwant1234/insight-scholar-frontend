@@ -112,6 +112,14 @@ const Navbar = () => {
               Add College
             </Link>
 
+            <Link
+              to="/update-college"
+              className="bg-[#D43134] text-white px-3 py-1.5 rounded text-sm font-medium hover:bg-[#b92c2f] transition-colors duration-200 shadow-sm"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Update College
+            </Link>
+
             {/* User Profile Dropdown */}
             {user && (
               <div className="relative user-dropdown">
@@ -254,6 +262,15 @@ const Navbar = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Add College
+                </Link>
+              </div>
+              <div className="pt-2">
+                <Link
+                  to="/update-college"
+                  className="block bg-[#D43134] text-white px-4 py-2 rounded text-sm font-medium hover:bg-[#b92c2f] transition-colors duration-200 text-center shadow-sm"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Update College
                 </Link>
               </div>
               <div className="pt-1">

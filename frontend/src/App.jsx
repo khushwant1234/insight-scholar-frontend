@@ -27,7 +27,7 @@ import MentorProfile from "./Pages/MentorProfile.jsx";
 import PageNotFound from "./Components/PageNotFound.jsx";
 import VerifyEmail from "./Pages/VerifyEmail.jsx";
 import CollegeComparison from "./Pages/CollegeComparison.jsx";
-// import FadeWrapper from "./Components/fadeIn.jsx";
+import UpdateCollege from "./Pages/UpdateCollege";
 
 const PrivateRoute = ({ element }) => {
   const location = useLocation();
@@ -137,6 +137,10 @@ const AnimatedRoutes = () => {
         <Route
           path="/compare-colleges"
           element={<PrivateRoute element={<CollegeComparison />} />}
+        />
+        <Route
+          path="/update-college"
+          element={<PrivateRoute element={<UpdateCollege />} />}
         />
 
         {/* Add this catch-all route at the end */}
