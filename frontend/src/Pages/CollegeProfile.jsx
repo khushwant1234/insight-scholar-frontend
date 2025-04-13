@@ -466,6 +466,52 @@ const CollegeProfile = () => {
                 </div>
               </div>
             </div>
+            <div className="mt-8">
+              <h3 className="text-xl font-semibold text-[#484848] mb-4">
+                College Metrics
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {Object.entries({
+                  safety: "Campus Safety",
+                  healthcare: "Healthcare Services",
+                  qualityOfTeaching: "Teaching Quality",
+                  campusCulture: "Campus Culture & Student Life",
+                  studentSupport: "Student Support Services",
+                  affordability: "Affordability & Financial Aid",
+                  placements: "Career Services & Job Placements",
+                }).map(([key, label]) => (
+                  <div key={key} className="bg-white p-4 rounded-lg shadow-sm">
+                    <h4 className="font-medium text-[#484848] mb-2">{label}</h4>
+
+                    {/* Rating Stars */}
+                    <div className="flex items-center mb-2">
+                      {[0, 1, 2, 3, 4, 5].map((star) => (
+                        <span
+                          key={star}
+                          className={`w-6 h-6 flex items-center justify-center rounded-full mr-1 
+                ${
+                  college.metrics[key]?.rating >= star
+                    ? "bg-yellow-400 text-white"
+                    : "bg-gray-200 text-gray-400"
+                }`}
+                        >
+                          {star}
+                        </span>
+                      ))}
+                      <span className="ml-2 text-sm text-gray-500">
+                        {college.metrics[key]?.rating || 0}/5
+                      </span>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-sm text-gray-600">
+                      {college.metrics[key]?.description ||
+                        "No information provided."}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         );
       case "discussion":

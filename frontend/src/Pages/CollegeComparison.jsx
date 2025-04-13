@@ -843,6 +843,71 @@ const CollegeComparison = () => {
               </div>
             </div>
 
+            {/* Metrics Comparison Section */}
+            <div className="mt-8 mb-6">
+              <h2 className="text-xl font-bold mb-4">
+                College Metrics Comparison
+              </h2>
+
+              {Object.entries({
+                safety: "Campus Safety",
+                healthcare: "Healthcare Services",
+                qualityOfTeaching: "Teaching Quality",
+                campusCulture: "Campus Culture",
+                studentSupport: "Student Support",
+                affordability: "Affordability",
+                placements: "Job Placements",
+              }).map(([key, label]) => (
+                <div
+                  key={key}
+                  className="grid grid-cols-4 border-b border-gray-200 py-4"
+                >
+                  <div className="font-medium">{label}</div>
+
+                  {[0, 1, 2].map((index) => (
+                    <div key={index} className="flex flex-col items-center">
+                      {selectedColleges[index] ? (
+                        <>
+                          {/* Rating Display */}
+                          <div className="flex mb-1">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <svg
+                                key={star}
+                                className={`w-4 h-4 ${
+                                  selectedColleges[index]?.metrics?.[key]
+                                    ?.rating >= star
+                                    ? "text-yellow-400"
+                                    : "text-gray-300"
+                                }`}
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                            ))}
+                            <span className="ml-1 text-xs">
+                              (
+                              {selectedColleges[index]?.metrics?.[key]
+                                ?.rating || 0}
+                              )
+                            </span>
+                          </div>
+
+                          {/* Description (truncated) */}
+                          <p className="text-xs text-gray-600 line-clamp-2">
+                            {selectedColleges[index]?.metrics?.[key]
+                              ?.description || "No information"}
+                          </p>
+                        </>
+                      ) : (
+                        <span className="text-gray-400">—</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+
             {/* Mobile View: Comparison Cards */}
             <div className="md:hidden mt-8">
               <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">

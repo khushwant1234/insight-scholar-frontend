@@ -27,13 +27,20 @@ const UpdateCollege = () => {
     founded: "",
     totalStudents: "",
     type: "",
-    safety: "",
-    healthcare: "",
-    qualityOfTeaching: "",
-    campusCulture: "",
-    studentSupport: "",
-    affordability: "",
-    placements: "",
+    safetyRating: 0,
+    safetyDescription: "",
+    healthcareRating: 0,
+    healthcareDescription: "",
+    qualityOfTeachingRating: 0,
+    qualityOfTeachingDescription: "",
+    campusCultureRating: 0,
+    campusCultureDescription: "",
+    studentSupportRating: 0,
+    studentSupportDescription: "",
+    affordabilityRating: 0,
+    affordabilityDescription: "",
+    placementsRating: 0,
+    placementsDescription: "",
   });
 
   // Load recently updated colleges from localStorage
@@ -94,16 +101,30 @@ const UpdateCollege = () => {
               founded: college.facts?.founded || "",
               totalStudents: college.facts?.totalStudents || "",
               type: college.facts?.type || "",
-              safety: college.metrics?.safety || "",
-              healthcare: college.metrics?.healthcare || "",
-              qualityOfTeaching: college.metrics?.qualityOfTeaching || "",
-              campusCulture: college.metrics?.campusCulture || "",
-              studentSupport: college.metrics?.studentSupport || "",
-              affordability: college.metrics?.affordability || "",
-              placements: college.metrics?.placements || "",
+              safetyRating: college.metrics?.safety?.rating || 0,
+              safetyDescription: college.metrics?.safety?.description || "",
+              healthcareRating: college.metrics?.healthcare?.rating || 0,
+              healthcareDescription:
+                college.metrics?.healthcare?.description || "",
+              qualityOfTeachingRating:
+                college.metrics?.qualityOfTeaching?.rating || 0,
+              qualityOfTeachingDescription:
+                college.metrics?.qualityOfTeaching?.description || "",
+              campusCultureRating: college.metrics?.campusCulture?.rating || 0,
+              campusCultureDescription:
+                college.metrics?.campusCulture?.description || "",
+              studentSupportRating:
+                college.metrics?.studentSupport?.rating || 0,
+              studentSupportDescription:
+                college.metrics?.studentSupport?.description || "",
+              affordabilityRating: college.metrics?.affordability?.rating || 0,
+              affordabilityDescription:
+                college.metrics?.affordability?.description || "",
+              placementsRating: college.metrics?.placements?.rating || 0,
+              placementsDescription:
+                college.metrics?.placements?.description || "",
             });
           } else {
-            // console.error("Failed to fetch college details:", data.message);
             toast.error("Failed to fetch college details");
           }
         } catch (error) {
@@ -180,40 +201,58 @@ const UpdateCollege = () => {
         type: formData.type,
       },
       metrics: {
-        safety: formData.safety ? Number(formData.safety) : undefined,
-        healthcare: formData.healthcare
-          ? Number(formData.healthcare)
-          : undefined,
-        qualityOfTeaching: formData.qualityOfTeaching
-          ? Number(formData.qualityOfTeaching)
-          : undefined,
-        campusCulture: formData.campusCulture
-          ? Number(formData.campusCulture)
-          : undefined,
-        studentSupport: formData.studentSupport
-          ? Number(formData.studentSupport)
-          : undefined,
-        affordability: formData.affordability
-          ? Number(formData.affordability)
-          : undefined,
-        placements: formData.placements
-          ? Number(formData.placements)
-          : undefined,
+        safety: {
+          rating: formData.safetyRating ? Number(formData.safetyRating) : 0,
+          description: formData.safetyDescription || "",
+        },
+        healthcare: {
+          rating: formData.healthcareRating
+            ? Number(formData.healthcareRating)
+            : 0,
+          description: formData.healthcareDescription || "",
+        },
+        qualityOfTeaching: {
+          rating: formData.qualityOfTeachingRating
+            ? Number(formData.qualityOfTeachingRating)
+            : 0,
+          description: formData.qualityOfTeachingDescription || "",
+        },
+        campusCulture: {
+          rating: formData.campusCultureRating
+            ? Number(formData.campusCultureRating)
+            : 0,
+          description: formData.campusCultureDescription || "",
+        },
+        studentSupport: {
+          rating: formData.studentSupportRating
+            ? Number(formData.studentSupportRating)
+            : 0,
+          description: formData.studentSupportDescription || "",
+        },
+        affordability: {
+          rating: formData.affordabilityRating
+            ? Number(formData.affordabilityRating)
+            : 0,
+          description: formData.affordabilityDescription || "",
+        },
+        placements: {
+          rating: formData.placementsRating
+            ? Number(formData.placementsRating)
+            : 0,
+          description: formData.placementsDescription || "",
+        },
       },
     };
 
     try {
       setLoading(true);
-      // console.log(selectedCollegeId, payload);
       const data = await PutApiCall(
         `${backendUrl}/api/college/${selectedCollegeId}`,
         payload
       );
-      // console.log(data);
       if (data.success) {
         toast.success("College updated successfully");
         updateRecentlyUpdated(selectedCollegeId, formData.name);
-        // navigate(`/college/${selectedCollegeId}`);
       } else {
         console.error("Failed to update college:", data.message);
         toast.error(data.message || "Failed to update college");
@@ -544,15 +583,15 @@ const UpdateCollege = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label
-                            htmlFor="safety"
+                            htmlFor="safetyRating"
                             className="block text-[#484848] font-semibold mb-2"
                           >
-                            Safety
+                            Safety Rating
                           </label>
                           <select
-                            name="safety"
-                            id="safety"
-                            value={formData.safety}
+                            name="safetyRating"
+                            id="safetyRating"
+                            value={formData.safetyRating}
                             onChange={handleChange}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
                           >
@@ -567,15 +606,33 @@ const UpdateCollege = () => {
 
                         <div>
                           <label
-                            htmlFor="healthcare"
+                            htmlFor="safetyDescription"
                             className="block text-[#484848] font-semibold mb-2"
                           >
-                            Healthcare
+                            Safety Description
+                          </label>
+                          <textarea
+                            name="safetyDescription"
+                            id="safetyDescription"
+                            value={formData.safetyDescription}
+                            onChange={handleChange}
+                            placeholder="Enter safety description"
+                            rows="2"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
+                          ></textarea>
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor="healthcareRating"
+                            className="block text-[#484848] font-semibold mb-2"
+                          >
+                            Healthcare Rating
                           </label>
                           <select
-                            name="healthcare"
-                            id="healthcare"
-                            value={formData.healthcare}
+                            name="healthcareRating"
+                            id="healthcareRating"
+                            value={formData.healthcareRating}
                             onChange={handleChange}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
                           >
@@ -590,15 +647,33 @@ const UpdateCollege = () => {
 
                         <div>
                           <label
-                            htmlFor="qualityOfTeaching"
+                            htmlFor="healthcareDescription"
                             className="block text-[#484848] font-semibold mb-2"
                           >
-                            Quality of Teaching
+                            Healthcare Description
+                          </label>
+                          <textarea
+                            name="healthcareDescription"
+                            id="healthcareDescription"
+                            value={formData.healthcareDescription}
+                            onChange={handleChange}
+                            placeholder="Enter healthcare description"
+                            rows="2"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
+                          ></textarea>
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor="qualityOfTeachingRating"
+                            className="block text-[#484848] font-semibold mb-2"
+                          >
+                            Quality of Teaching Rating
                           </label>
                           <select
-                            name="qualityOfTeaching"
-                            id="qualityOfTeaching"
-                            value={formData.qualityOfTeaching}
+                            name="qualityOfTeachingRating"
+                            id="qualityOfTeachingRating"
+                            value={formData.qualityOfTeachingRating}
                             onChange={handleChange}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
                           >
@@ -613,15 +688,33 @@ const UpdateCollege = () => {
 
                         <div>
                           <label
-                            htmlFor="campusCulture"
+                            htmlFor="qualityOfTeachingDescription"
                             className="block text-[#484848] font-semibold mb-2"
                           >
-                            Campus Culture
+                            Quality of Teaching Description
+                          </label>
+                          <textarea
+                            name="qualityOfTeachingDescription"
+                            id="qualityOfTeachingDescription"
+                            value={formData.qualityOfTeachingDescription}
+                            onChange={handleChange}
+                            placeholder="Enter quality of teaching description"
+                            rows="2"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
+                          ></textarea>
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor="campusCultureRating"
+                            className="block text-[#484848] font-semibold mb-2"
+                          >
+                            Campus Culture Rating
                           </label>
                           <select
-                            name="campusCulture"
-                            id="campusCulture"
-                            value={formData.campusCulture}
+                            name="campusCultureRating"
+                            id="campusCultureRating"
+                            value={formData.campusCultureRating}
                             onChange={handleChange}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
                           >
@@ -636,15 +729,33 @@ const UpdateCollege = () => {
 
                         <div>
                           <label
-                            htmlFor="studentSupport"
+                            htmlFor="campusCultureDescription"
                             className="block text-[#484848] font-semibold mb-2"
                           >
-                            Student Support
+                            Campus Culture Description
+                          </label>
+                          <textarea
+                            name="campusCultureDescription"
+                            id="campusCultureDescription"
+                            value={formData.campusCultureDescription}
+                            onChange={handleChange}
+                            placeholder="Enter campus culture description"
+                            rows="2"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
+                          ></textarea>
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor="studentSupportRating"
+                            className="block text-[#484848] font-semibold mb-2"
+                          >
+                            Student Support Rating
                           </label>
                           <select
-                            name="studentSupport"
-                            id="studentSupport"
-                            value={formData.studentSupport}
+                            name="studentSupportRating"
+                            id="studentSupportRating"
+                            value={formData.studentSupportRating}
                             onChange={handleChange}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
                           >
@@ -659,15 +770,33 @@ const UpdateCollege = () => {
 
                         <div>
                           <label
-                            htmlFor="affordability"
+                            htmlFor="studentSupportDescription"
                             className="block text-[#484848] font-semibold mb-2"
                           >
-                            Affordability
+                            Student Support Description
+                          </label>
+                          <textarea
+                            name="studentSupportDescription"
+                            id="studentSupportDescription"
+                            value={formData.studentSupportDescription}
+                            onChange={handleChange}
+                            placeholder="Enter student support description"
+                            rows="2"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
+                          ></textarea>
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor="affordabilityRating"
+                            className="block text-[#484848] font-semibold mb-2"
+                          >
+                            Affordability Rating
                           </label>
                           <select
-                            name="affordability"
-                            id="affordability"
-                            value={formData.affordability}
+                            name="affordabilityRating"
+                            id="affordabilityRating"
+                            value={formData.affordabilityRating}
                             onChange={handleChange}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
                           >
@@ -682,15 +811,33 @@ const UpdateCollege = () => {
 
                         <div>
                           <label
-                            htmlFor="placements"
+                            htmlFor="affordabilityDescription"
                             className="block text-[#484848] font-semibold mb-2"
                           >
-                            Placements
+                            Affordability Description
+                          </label>
+                          <textarea
+                            name="affordabilityDescription"
+                            id="affordabilityDescription"
+                            value={formData.affordabilityDescription}
+                            onChange={handleChange}
+                            placeholder="Enter affordability description"
+                            rows="2"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
+                          ></textarea>
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor="placementsRating"
+                            className="block text-[#484848] font-semibold mb-2"
+                          >
+                            Placements Rating
                           </label>
                           <select
-                            name="placements"
-                            id="placements"
-                            value={formData.placements}
+                            name="placementsRating"
+                            id="placementsRating"
+                            value={formData.placementsRating}
                             onChange={handleChange}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
                           >
@@ -701,6 +848,24 @@ const UpdateCollege = () => {
                               </option>
                             ))}
                           </select>
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor="placementsDescription"
+                            className="block text-[#484848] font-semibold mb-2"
+                          >
+                            Placements Description
+                          </label>
+                          <textarea
+                            name="placementsDescription"
+                            id="placementsDescription"
+                            value={formData.placementsDescription}
+                            onChange={handleChange}
+                            placeholder="Enter placements description"
+                            rows="2"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
+                          ></textarea>
                         </div>
                       </div>
                     </div>
