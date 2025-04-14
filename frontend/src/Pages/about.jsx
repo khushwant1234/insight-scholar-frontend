@@ -15,42 +15,33 @@ const About = () => {
 
   // Team members with more detailed info
   const coreTeam = [
-    // {
-    //   name: "Alexandra Chen",
-    //   role: "Chief Executive Officer",
-    //   bio: "Former education consultant with 15+ years of experience transforming educational access.",
-    //   image: "https://via.placeholder.com/300",
-    //   linkedin: "https://linkedin.com/in/",
-    //   twitter: "https://twitter.com/",
-    //   email: "mailto:alexandra@example.com",
-    // },
-    // {
-    //   name: "Michael Patel",
-    //   role: "Chief Technology Officer",
-    //   bio: "Tech veteran with background building scalable platforms at leading EdTech companies.",
-    //   image: "https://via.placeholder.com/300",
-    //   linkedin: "https://linkedin.com/in/",
-    //   twitter: "https://twitter.com/",
-    //   email: "mailto:michael@example.com",
-    // },
-    // {
-    //   name: "Sarah Johnson",
-    //   role: "Head of Finance",
-    //   bio: "Financial strategist specializing in educational sector investments and sustainable growth.",
-    //   image: "https://via.placeholder.com/300",
-    //   linkedin: "https://linkedin.com/in/",
-    //   twitter: "https://twitter.com/",
-    //   email: "mailto:sarah@example.com",
-    // },
-    // {
-    //   name: "David Wilson",
-    //   role: "Business Development Lead",
-    //   bio: "Partnership specialist with a passion for connecting institutions with the right students.",
-    //   image: "https://via.placeholder.com/300",
-    //   linkedin: "https://linkedin.com/in/",
-    //   twitter: "https://twitter.com/",
-    //   email: "mailto:david@example.com",
-    // },
+    {
+      name: "Srinjoy Palit",
+      role: "Team Lead",
+      // bio: "Former education consultant with 15+ years of experience transforming educational access.",
+      image: "Srinjoy.jpeg",
+      linkedin: "https://www.linkedin.com/in/srinjoypalit/",
+    },
+    {
+      name: "Rajat Verma",
+      role: "Chief Financial Officer",
+      // bio: "Tech veteran with background building scalable platforms at leading EdTech companies.",
+      image: "Rajat.jpeg",
+      linkedin: "https://linkedin.com/in/",
+    },
+    {
+      name: "Saumil Jain",
+      role: "Chief Marketing Officer",
+      image: "/Saumil.jpeg",
+      linkedin: "https://linkedin.com/in/",
+    },
+    {
+      name: "SS Nandan",
+      role: "Chief Technology Officer",
+
+      image: "/Nandan.jpeg",
+      linkedin: "https://www.linkedin.com/in/ss-nandan/",
+    },
   ];
 
   const developers = [
@@ -162,14 +153,14 @@ const About = () => {
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
             <div className="max-w-6xl mx-auto">
-              <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">
+              <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">
                 Leadership Team
               </h2>
-              <p className="text-lg text-gray-600 text-center max-w-3xl mx-auto mb-12">
+              {/* <p className="text-lg text-gray-600 text-center max-w-3xl mx-auto mb-12">
                 Our experienced leadership team brings decades of combined
                 experience in education, technology, and business to drive our
                 mission forward.
-              </p>
+              </p> */}
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {coreTeam.map((member, index) => (
@@ -177,7 +168,7 @@ const About = () => {
                     key={index}
                     className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
                   >
-                    <div className="h-64 overflow-hidden">
+                    <div className="h-96 overflow-hidden">
                       <img
                         className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
                         src={member.image}
@@ -191,7 +182,7 @@ const About = () => {
                       <p className="text-blue-600 font-medium mb-3">
                         {member.role}
                       </p>
-                      <p className="text-gray-600 mb-4 text-sm">{member.bio}</p>
+                      {/* <p className="text-gray-600 mb-4 text-sm">{member.bio}</p> */}
                       <div className="flex space-x-3">
                         <a
                           href={member.linkedin}
@@ -200,22 +191,6 @@ const About = () => {
                           className="text-gray-500 hover:text-blue-600 transition-colors"
                         >
                           <FaLinkedin size={20} />
-                        </a>
-                        <a
-                          href={member.twitter}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-500 hover:text-blue-400 transition-colors"
-                        >
-                          <FaTwitter size={20} />
-                        </a>
-                        <a
-                          href={member.email}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-500 hover:text-red-500 transition-colors"
-                        >
-                          <FaEnvelope size={20} />
                         </a>
                       </div>
                     </div>
@@ -231,7 +206,7 @@ const About = () => {
           <div className="container mx-auto px-6">
             <div className="max-w-6xl mx-auto">
               <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
-                The Creators
+                Developer
               </h2>
               <div className="max-w-md mx-auto">
                 {developers.map((dev, index) => (

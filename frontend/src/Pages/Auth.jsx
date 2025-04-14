@@ -8,6 +8,7 @@ import { UserContext } from "../context/userContext";
 import Loading from "../Components/Loading";
 import FadeWrapper from "../Components/fadeIn";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -30,13 +31,18 @@ const Auth = () => {
   const [loading, setLoading] = useState(true);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState("");
+  const [emailDomainError, setEmailDomainError] = useState("");
+  const [selectedCollege, setSelectedCollege] = useState(null);
+  const [passwordStrength, setPasswordStrength] = useState({
+    score: 0,
+    message: "Password not entered",
+    color: "gray-400",
+  });
   const navigate = useNavigate();
   const { setUser, setColleges } = useContext(UserContext);
 
-  // Define the toggleForm function
   const toggleForm = () => {
     setIsSignup(!isSignup);
-    // Reset any error states if needed
   };
 
   useEffect(() => {
@@ -60,12 +66,113 @@ const Auth = () => {
     fetchColleges();
   }, [setColleges]);
 
+  const validateEmailDomain = (email, collegeId) => {
+    if (!email || !collegeId || collegeId === "notInCollege") {
+      setEmailDomainError("");
+      return true;
+    }
+
+    const college = collegeOptions.find((c) => c._id === collegeId);
+    if (
+      !college ||
+      !college.emailDomains ||
+      college.emailDomains.length === 0
+    ) {
+      setEmailDomainError("");
+      return true;
+    }
+
+    const emailDomain = email.split("@")[1];
+    if (!emailDomain) {
+      setEmailDomainError("Please enter a valid email address");
+      return false;
+    }
+
+    if (!college.emailDomains.includes(emailDomain)) {
+      setEmailDomainError(
+        `To register with ${
+          college.name
+        }, you must use an email address from one of these domains: ${college.emailDomains.join(
+          ", "
+        )}`
+      );
+      return false;
+    }
+
+    setEmailDomainError("");
+    return true;
+  };
+
+  const checkPasswordStrength = (password) => {
+    if (!password) {
+      setPasswordStrength({
+        score: 0,
+        message: "Password not entered",
+        color: "gray-400",
+      });
+      return;
+    }
+
+    let score = 0;
+
+    // Length check
+    if (password.length >= 8) score += 1;
+    if (password.length >= 12) score += 1;
+
+    // Complexity checks
+    if (/[A-Z]/.test(password)) score += 1;
+    if (/[0-9]/.test(password)) score += 1;
+    if (/[^A-Za-z0-9]/.test(password)) score += 1;
+
+    // Set message based on score
+    let message, color;
+
+    switch (score) {
+      case 0:
+      case 1:
+        message = "Very Weak";
+        color = "red-500";
+        break;
+      case 2:
+        message = "Weak";
+        color = "orange-500";
+        break;
+      case 3:
+        message = "Moderate";
+        color = "yellow-500";
+        break;
+      case 4:
+        message = "Strong";
+        color = "green-500";
+        break;
+      case 5:
+        message = "Very Strong";
+        color = "green-600";
+        break;
+      default:
+        message = "Unknown";
+        color = "gray-400";
+    }
+
+    setPasswordStrength({ score, message, color });
+  };
+
   const handleSignupChange = (e) => {
     const { name, value } = e.target;
     setSignupForm((prev) => ({
       ...prev,
       [name]: value,
     }));
+
+    if (name === "email") {
+      validateEmailDomain(value, signupForm.college);
+    } else if (name === "college") {
+      const college = collegeOptions.find((c) => c._id === value);
+      setSelectedCollege(college);
+      validateEmailDomain(signupForm.email, value);
+    } else if (name === "password") {
+      checkPasswordStrength(value);
+    }
   };
 
   const handleLoginChange = (e) => {
@@ -81,6 +188,18 @@ const Auth = () => {
     if (!signupForm.name || !signupForm.email || !signupForm.password) {
       toast.error("Please fill required fields");
       return;
+    }
+
+    if (signupForm.password.length < 8) {
+      toast.error("Password must be at least 8 characters long");
+      return;
+    }
+
+    if (signupForm.college && signupForm.college !== "notInCollege") {
+      const isValid = validateEmailDomain(signupForm.email, signupForm.college);
+      if (!isValid) {
+        return;
+      }
     }
 
     try {
@@ -106,7 +225,6 @@ const Auth = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
-    // Add validation to catch empty fields
     if (!loginForm.email || !loginForm.password) {
       toast.error("Please enter both email and password");
       return;
@@ -160,11 +278,8 @@ const Auth = () => {
   return (
     <FadeWrapper>
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 flex items-stretch">
-        {/* Left Side: Illustration and Brand */}
         <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-          {/* Background gradient with patterns */}
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-700">
-            {/* Abstract pattern */}
             <div className="absolute inset-0 opacity-10">
               <svg width="100%" height="100%">
                 <defs>
@@ -200,7 +315,6 @@ const Auth = () => {
               </svg>
             </div>
 
-            {/* Floating circles */}
             <motion.div
               className="absolute top-1/4 left-1/4 w-32 h-32 bg-white rounded-full opacity-10"
               animate={{
@@ -227,7 +341,6 @@ const Auth = () => {
             />
           </div>
 
-          {/* Content */}
           <div className="relative z-10 flex flex-col justify-between h-full p-12">
             <div>
               <div className="flex items-center space-x-3">
@@ -242,7 +355,6 @@ const Auth = () => {
               </p>
             </div>
 
-            {/* Illustration */}
             <div className="flex-grow flex items-center justify-center">
               <img
                 src="/gpt-edu1.png"
@@ -253,30 +365,9 @@ const Auth = () => {
                 Designed By FreePik
               </a>
             </div>
-
-            {/* Testimonial */}
-            {/* <div className="bg-white/10 backdrop-blur-sm p-5 rounded-xl border border-white/20">
-              <p className="text-white italic">
-                "InsightScholar helped me find the perfect college community and
-                connect with mentors who've guided me through my academic
-                journey."
-              </p>
-              <div className="mt-4 flex items-center">
-                <div className="w-10 h-10 rounded-full bg-indigo-300 flex items-center justify-center text-indigo-700 font-bold">
-                  JS
-                </div>
-                <div className="ml-3">
-                  <p className="text-white font-medium">Jamie Smith</p>
-                  <p className="text-indigo-200 text-sm">
-                    Computer Science, Stanford
-                  </p>
-                </div>
-              </div>
-            </div> */}
           </div>
         </div>
 
-        {/* Right Side: Auth Forms */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
           <div className="w-full max-w-md">
             <motion.div
@@ -285,9 +376,7 @@ const Auth = () => {
               transition={{ duration: 0.5 }}
               className="bg-white rounded-2xl shadow-xl overflow-hidden"
             >
-              {/* Form Header */}
               <div className="relative h-16 bg-gradient-to-r from-indigo-500 to-purple-600 overflow-hidden">
-                {/* Background animation - ensure it's behind everything and can't capture clicks */}
                 <div
                   className="absolute inset-0 opacity-20 pointer-events-none"
                   style={{ zIndex: 1 }}
@@ -296,7 +385,6 @@ const Auth = () => {
                     viewBox="0 0 100 100"
                     preserveAspectRatio="xMidYMid slice"
                   >
-                    {/* SVG content remains unchanged */}
                     <defs>
                       <radialGradient
                         id="Gradient1"
@@ -321,7 +409,6 @@ const Auth = () => {
                           stopColor="rgba(255, 0, 255, 0)"
                         ></stop>
                       </radialGradient>
-                      {/* Other gradient definitions remain the same */}
                     </defs>
                     <rect
                       x="0"
@@ -329,14 +416,10 @@ const Auth = () => {
                       width="100%"
                       height="100%"
                       fill="url(#Gradient1)"
-                    >
-                      {/* Animation elements remain the same */}
-                    </rect>
-                    {/* Other rectangle elements remain the same */}
+                    ></rect>
                   </svg>
                 </div>
 
-                {/* Form switcher - ensure it's above the animation with a higher z-index */}
                 <div className="flex h-full relative" style={{ zIndex: 10 }}>
                   <button
                     onClick={() => setIsSignup(false)}
@@ -383,7 +466,6 @@ const Auth = () => {
                 </div>
               </div>
 
-              {/* Form Content */}
               <div className="p-8">
                 {registrationSuccess ? (
                   <motion.div
@@ -551,6 +633,15 @@ const Auth = () => {
                                 </svg>
                               </div>
                             </div>
+                            {isSignup &&
+                              selectedCollege &&
+                              selectedCollege.emailDomains &&
+                              selectedCollege.emailDomains.length > 0 && (
+                                <p className="text-sm text-gray-500 mt-1">
+                                  This college requires an email from:{" "}
+                                  {selectedCollege.emailDomains.join(", ")}
+                                </p>
+                              )}
                           </div>
 
                           {signupForm.college &&
@@ -678,30 +769,86 @@ const Auth = () => {
                               isSignup ? handleSignupChange : handleLoginChange
                             }
                             placeholder="you@example.com"
-                            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            className={`w-full pl-10 pr-4 py-2.5 border ${
+                              emailDomainError
+                                ? "border-red-500"
+                                : "border-gray-300"
+                            } rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                             required
                           />
                         </div>
+                        {isSignup && emailDomainError && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {emailDomainError}
+                          </p>
+                        )}
                       </div>
 
+                      {isSignup &&
+                        signupForm.college &&
+                        signupForm.college !== "notInCollege" &&
+                        signupForm.email && (
+                          <div className="flex items-center mt-1">
+                            {emailDomainError ? (
+                              <>
+                                <svg
+                                  className="w-4 h-4 text-red-500 mr-1"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                  />
+                                </svg>
+                                <span className="text-sm text-red-500">
+                                  Email domain doesn't match college
+                                  requirements
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <svg
+                                  className="w-4 h-4 text-green-500 mr-1"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                                <span className="text-sm text-green-500">
+                                  Email domain verified for this college
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        )}
+
                       <div className="space-y-2">
-                        {!isSignup && (
+                        {isSignup ? (
+                          <label className="text-sm font-medium text-gray-700 block">
+                            Password <span className="text-red-500">*</span>
+                          </label>
+                        ) : (
                           <div className="flex items-center justify-between">
                             <label className="text-sm font-medium text-gray-700">
                               Password
                             </label>
-                            <a
-                              href="#"
+                            <Link
+                              to="/forgot-password"
                               className="text-xs text-indigo-600 hover:text-indigo-800 transition-colors duration-200"
                             >
                               Forgot password?
-                            </a>
+                            </Link>
                           </div>
-                        )}
-                        {isSignup && (
-                          <label className="text-sm font-medium text-gray-700 block">
-                            Password <span className="text-red-500">*</span>
-                          </label>
                         )}
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -733,8 +880,39 @@ const Auth = () => {
                             placeholder="••••••••"
                             className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                             required
+                            minLength={8}
                           />
                         </div>
+
+                        {isSignup && signupForm.password && (
+                          <div className="mt-2">
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="text-xs text-gray-500">
+                                Password Strength:
+                              </span>
+                              <span
+                                className={`text-xs font-medium text-${passwordStrength.color}`}
+                              >
+                                {passwordStrength.message}
+                              </span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-1.5">
+                              <div
+                                className={`bg-${passwordStrength.color} h-1.5 rounded-full`}
+                                style={{
+                                  width: `${Math.min(
+                                    100,
+                                    passwordStrength.score * 20
+                                  )}%`,
+                                }}
+                              ></div>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">
+                              Use 8+ characters with a mix of letters, numbers &
+                              symbols
+                            </p>
+                          </div>
+                        )}
                       </div>
 
                       {!isSignup && (
@@ -786,7 +964,6 @@ const Auth = () => {
                 )}
               </div>
 
-              {/* Footer */}
               <div className="bg-gray-50 px-8 py-4 border-t border-gray-100">
                 <div className="text-center text-gray-600 text-sm">
                   By continuing, you agree to InsightScholar's{" "}
@@ -801,7 +978,6 @@ const Auth = () => {
               </div>
             </motion.div>
 
-            {/* Mobile Brand for small screens */}
             <div className="mt-8 text-center lg:hidden">
               <div className="flex items-center justify-center space-x-2">
                 <img src="/logonobg2.png" alt="Logo" className="h-8 w-8" />

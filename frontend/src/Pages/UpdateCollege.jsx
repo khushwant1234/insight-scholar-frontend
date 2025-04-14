@@ -576,8 +576,8 @@ const UpdateCollege = () => {
                         College Metrics
                       </h2>
                       <p className="text-sm text-gray-500 mb-4">
-                        Rate each metric on a scale of 1-5 (1 being the lowest,
-                        5 being the highest)
+                        Rate each metric on a scale of 0-5 (0 being Not
+                        Available, 5 being Excellent)
                       </p>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -586,22 +586,22 @@ const UpdateCollege = () => {
                             htmlFor="safetyRating"
                             className="block text-[#484848] font-semibold mb-2"
                           >
-                            Safety Rating
+                            Safety Rating (0-5)
                           </label>
-                          <select
+                          <input
+                            type="number"
                             name="safetyRating"
                             id="safetyRating"
                             value={formData.safetyRating}
                             onChange={handleChange}
+                            min="0"
+                            max="5"
+                            step="0.1"
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
-                          >
-                            <option value="">Select Rating</option>
-                            {[1, 2, 3, 4, 5].map((num) => (
-                              <option key={num} value={num}>
-                                {num}
-                              </option>
-                            ))}
-                          </select>
+                          />
+                          <p className="mt-1 text-xs text-gray-500">
+                            Rate from 0 (Not Available) to 5 (Excellent)
+                          </p>
                         </div>
 
                         <div>
@@ -627,22 +627,22 @@ const UpdateCollege = () => {
                             htmlFor="healthcareRating"
                             className="block text-[#484848] font-semibold mb-2"
                           >
-                            Healthcare Rating
+                            Healthcare Rating (0-5)
                           </label>
-                          <select
+                          <input
+                            type="number"
                             name="healthcareRating"
                             id="healthcareRating"
                             value={formData.healthcareRating}
                             onChange={handleChange}
+                            min="0"
+                            max="5"
+                            step="0.1"
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
-                          >
-                            <option value="">Select Rating</option>
-                            {[1, 2, 3, 4, 5].map((num) => (
-                              <option key={num} value={num}>
-                                {num}
-                              </option>
-                            ))}
-                          </select>
+                          />
+                          <p className="mt-1 text-xs text-gray-500">
+                            Rate from 0 (Not Available) to 5 (Excellent)
+                          </p>
                         </div>
 
                         <div>
@@ -668,22 +668,22 @@ const UpdateCollege = () => {
                             htmlFor="qualityOfTeachingRating"
                             className="block text-[#484848] font-semibold mb-2"
                           >
-                            Quality of Teaching Rating
+                            Quality of Teaching Rating (0-5)
                           </label>
-                          <select
+                          <input
+                            type="number"
                             name="qualityOfTeachingRating"
                             id="qualityOfTeachingRating"
                             value={formData.qualityOfTeachingRating}
                             onChange={handleChange}
+                            min="0"
+                            max="5"
+                            step="0.1"
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
-                          >
-                            <option value="">Select Rating</option>
-                            {[1, 2, 3, 4, 5].map((num) => (
-                              <option key={num} value={num}>
-                                {num}
-                              </option>
-                            ))}
-                          </select>
+                          />
+                          <p className="mt-1 text-xs text-gray-500">
+                            Rate from 0 (Not Available) to 5 (Excellent)
+                          </p>
                         </div>
 
                         <div>
@@ -709,22 +709,22 @@ const UpdateCollege = () => {
                             htmlFor="campusCultureRating"
                             className="block text-[#484848] font-semibold mb-2"
                           >
-                            Campus Culture Rating
+                            Campus Culture Rating (0-5)
                           </label>
-                          <select
+                          <input
+                            type="number"
                             name="campusCultureRating"
                             id="campusCultureRating"
                             value={formData.campusCultureRating}
                             onChange={handleChange}
+                            min="0"
+                            max="5"
+                            step="0.1"
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
-                          >
-                            <option value="">Select Rating</option>
-                            {[1, 2, 3, 4, 5].map((num) => (
-                              <option key={num} value={num}>
-                                {num}
-                              </option>
-                            ))}
-                          </select>
+                          />
+                          <p className="mt-1 text-xs text-gray-500">
+                            Rate from 0 (Not Available) to 5 (Excellent)
+                          </p>
                         </div>
 
                         <div>
@@ -750,22 +750,22 @@ const UpdateCollege = () => {
                             htmlFor="studentSupportRating"
                             className="block text-[#484848] font-semibold mb-2"
                           >
-                            Student Support Rating
+                            Student Support Rating (0-5)
                           </label>
-                          <select
+                          <input
+                            type="number"
                             name="studentSupportRating"
                             id="studentSupportRating"
                             value={formData.studentSupportRating}
                             onChange={handleChange}
+                            min="0"
+                            max="5"
+                            step="0.1"
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
-                          >
-                            <option value="">Select Rating</option>
-                            {[1, 2, 3, 4, 5].map((num) => (
-                              <option key={num} value={num}>
-                                {num}
-                              </option>
-                            ))}
-                          </select>
+                          />
+                          <p className="mt-1 text-xs text-gray-500">
+                            Rate from 0 (Not Available) to 5 (Excellent)
+                          </p>
                         </div>
 
                         <div>
@@ -791,22 +791,22 @@ const UpdateCollege = () => {
                             htmlFor="affordabilityRating"
                             className="block text-[#484848] font-semibold mb-2"
                           >
-                            Affordability Rating
+                            Affordability Rating (0-5)
                           </label>
-                          <select
+                          <input
+                            type="number"
                             name="affordabilityRating"
                             id="affordabilityRating"
                             value={formData.affordabilityRating}
                             onChange={handleChange}
+                            min="0"
+                            max="5"
+                            step="0.1"
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
-                          >
-                            <option value="">Select Rating</option>
-                            {[1, 2, 3, 4, 5].map((num) => (
-                              <option key={num} value={num}>
-                                {num}
-                              </option>
-                            ))}
-                          </select>
+                          />
+                          <p className="mt-1 text-xs text-gray-500">
+                            Rate from 0 (Not Available) to 5 (Excellent)
+                          </p>
                         </div>
 
                         <div>
@@ -832,22 +832,22 @@ const UpdateCollege = () => {
                             htmlFor="placementsRating"
                             className="block text-[#484848] font-semibold mb-2"
                           >
-                            Placements Rating
+                            Placements Rating (0-5)
                           </label>
-                          <select
+                          <input
+                            type="number"
                             name="placementsRating"
                             id="placementsRating"
                             value={formData.placementsRating}
                             onChange={handleChange}
+                            min="0"
+                            max="5"
+                            step="0.1"
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D43134C4] focus:border-transparent"
-                          >
-                            <option value="">Select Rating</option>
-                            {[1, 2, 3, 4, 5].map((num) => (
-                              <option key={num} value={num}>
-                                {num}
-                              </option>
-                            ))}
-                          </select>
+                          />
+                          <p className="mt-1 text-xs text-gray-500">
+                            Rate from 0 (Not Available) to 5 (Excellent)
+                          </p>
                         </div>
 
                         <div>

@@ -94,7 +94,8 @@ const UpdateProfile = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const updatedData = {
+      // Create updatedData but omit the college field
+      const { college, ...dataToUpdate } = {
         ...formData,
         interests: formData.interests
           .split(",")
@@ -104,7 +105,7 @@ const UpdateProfile = () => {
 
       const data = await PutApiCall(
         `${backendUrl}/api/user/profile`,
-        updatedData
+        dataToUpdate
       );
       if (data.success) {
         const { success, ...userData } = data;
@@ -227,20 +228,18 @@ const UpdateProfile = () => {
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             College
                           </label>
-                          <select
-                            name="college"
-                            value={formData.college}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          >
-                            <option value="">Select College</option>
-                            <option value="notInCollege">Not in College</option>
-                            {collegeOptions.map((college) => (
-                              <option key={college._id} value={college._id}>
-                                {college.name}
-                              </option>
-                            ))}
-                          </select>
+                          <div className="w-full px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-md text-gray-700">
+                            {formData.college === "notInCollege"
+                              ? "Not in College"
+                              : collegeOptions.find(
+                                  (c) => c._id === formData.college
+                                )?.name || "Loading college info..."}
+                            <p className="mt-1 text-xs text-gray-500">
+                              College affiliation cannot be changed after
+                              signup. Please contact support if you need to
+                              update this information.
+                            </p>
+                          </div>
                         </div>
 
                         {formData.college &&

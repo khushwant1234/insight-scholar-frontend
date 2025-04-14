@@ -157,35 +157,21 @@ const AddColleges = () => {
           <label className="block text-gray-700 font-medium mb-2">
             Rating (0-5)
           </label>
-          <div className="flex items-center space-x-1">
-            {[0, 1, 2, 3, 4, 5].map((num) => (
-              <label key={num} className="flex items-center justify-center">
-                <input
-                  type="radio"
-                  name={ratingName}
-                  value={num}
-                  checked={Number(formData[ratingName]) === num}
-                  onChange={handleChange}
-                  className="sr-only"
-                />
-                <span
-                  className={`w-10 h-10 flex items-center justify-center rounded-full cursor-pointer border-2 ${
-                    Number(formData[ratingName]) === num
-                      ? "bg-blue-500 text-white border-blue-600"
-                      : "bg-white border-gray-300 hover:bg-gray-100"
-                  }`}
-                >
-                  {num}
-                </span>
-              </label>
-            ))}
-          </div>
-
-          <div className="flex justify-between text-xs text-gray-500 mt-1 px-2">
-            <span>Not Available</span>
-            <span>Poor</span>
-            <span>Average</span>
-            <span>Excellent</span>
+          <div className="flex items-center">
+            <input
+              type="number"
+              name={ratingName}
+              id={ratingName}
+              value={formData[ratingName]}
+              onChange={handleChange}
+              min="0"
+              max="5"
+              step="0.1"
+              className="w-24 px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+            />
+            <span className="ml-2 text-sm text-gray-500">
+              (0 = Not Available, 5 = Excellent)
+            </span>
           </div>
         </div>
 

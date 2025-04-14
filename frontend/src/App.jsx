@@ -28,6 +28,8 @@ import PageNotFound from "./Components/PageNotFound.jsx";
 import VerifyEmail from "./Pages/VerifyEmail.jsx";
 import CollegeComparison from "./Pages/CollegeComparison.jsx";
 import UpdateCollege from "./Pages/UpdateCollege";
+import ForgotPassword from "./Pages/ForgotPassword";
+import ResetPassword from "./Pages/ResetPassword";
 
 const PrivateRoute = ({ element }) => {
   const location = useLocation();
@@ -142,6 +144,8 @@ const AnimatedRoutes = () => {
           path="/update-college"
           element={<PrivateRoute element={<UpdateCollege />} />}
         />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         {/* Add this catch-all route at the end */}
         <Route path="*" element={<PageNotFound />} />
