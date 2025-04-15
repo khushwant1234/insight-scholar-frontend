@@ -924,11 +924,40 @@ const CollegeComparison = () => {
                             </span>
                           </div>
 
-                          {/* Description (truncated) */}
-                          <p className="text-xs text-gray-600 line-clamp-2">
-                            {selectedColleges[index]?.metrics?.[key]
-                              ?.description || "No information"}
-                          </p>
+                          {/* Description with bullet points as a list */}
+                          {selectedColleges[index]?.metrics?.[key]
+                            ?.description ? (
+                            <div className="text-xs text-gray-600">
+                              {selectedColleges[index]?.metrics?.[
+                                key
+                              ]?.description.includes("•") ? (
+                                <ul className="list-disc pl-4 space-y-0.5 mt-1">
+                                  {selectedColleges[index]?.metrics?.[
+                                    key
+                                  ]?.description
+                                    .split("•")
+                                    .filter((item) => item.trim().length > 0)
+                                    .map((item, i) => (
+                                      <li key={i} className="text-xs">
+                                        {item.trim()}
+                                      </li>
+                                    ))}
+                                </ul>
+                              ) : (
+                                // If no bullet points, display as regular text
+                                <p>
+                                  {
+                                    selectedColleges[index]?.metrics?.[key]
+                                      ?.description
+                                  }
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <p className="text-xs text-gray-600">
+                              No information
+                            </p>
+                          )}
                         </>
                       ) : (
                         <span className="text-gray-400">—</span>
