@@ -493,13 +493,42 @@ const Auth = () => {
                     <h2 className="text-2xl font-bold mb-4 text-gray-800">
                       Verification Sent!
                     </h2>
-                    <p className="mb-6 text-gray-600">
+                    <p className="mb-3 text-gray-600">
                       Please check your email at{" "}
                       <span className="font-semibold text-indigo-600">
                         {registeredEmail}
                       </span>{" "}
                       to verify your account.
                     </p>
+                    <div className="mb-6 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-md">
+                      <div className="flex items-start">
+                        <div className="flex-shrink-0">
+                          <svg
+                            className="h-5 w-5 text-yellow-500"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                            />
+                          </svg>
+                        </div>
+                        <div className="ml-3">
+                          <p className="text-sm text-yellow-700 font-medium">
+                            Important!
+                          </p>
+                          <p className="text-sm text-yellow-600">
+                            Please check your <strong>spam/junk folder</strong>{" "}
+                            if you don't see the verification email in your
+                            inbox within a few minutes.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                     <button
                       onClick={() => handleResendVerification(registeredEmail)}
                       className="bg-indigo-100 text-indigo-600 px-6 py-2 rounded-lg font-medium hover:bg-indigo-200 transition-colors duration-300 inline-flex items-center gap-2"
