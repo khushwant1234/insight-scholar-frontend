@@ -36,7 +36,7 @@ const Navbar = () => {
   }, [showUserDropdown]);
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+    <nav className="bg-[#062f2e] shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2">
@@ -45,7 +45,7 @@ const Navbar = () => {
               alt="Insight Scholar"
               className="h-10 w-10"
             />
-            <span className="text-lg font-semibold text-gray-800 hidden sm:block">
+            <span className="text-lg font-semibold text-white hidden sm:block">
               InsightScholar
             </span>
           </Link>
@@ -55,9 +55,9 @@ const Navbar = () => {
             <div className="flex space-x-5">
               <Link
                 to="/"
-                className={`text-gray-600 hover:text-[#062f2e] font-medium transition-colors py-1 border-b-2 ${
+                className={`text-white hover:text-[#a08961] font-medium transition-colors py-1 border-b-2 ${
                   isActive("/")
-                    ? "border-[#062f2e] text-[#062f2e]"
+                    ? "border-[#a08961] text-[#a08961]"
                     : "border-transparent"
                 }`}
               >
@@ -65,9 +65,9 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/about"
-                className={`text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors duration-200 py-1 border-b-2 ${
+                className={`text-white hover:text-[#a08961] font-medium text-sm transition-colors duration-200 py-1 border-b-2 ${
                   isActive("/about")
-                    ? "border-[#D43134] text-gray-900"
+                    ? "border-[#a08961] text-[#a08961]"
                     : "border-transparent"
                 }`}
               >
@@ -75,9 +75,9 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/colleges"
-                className={`text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors duration-200 py-1 border-b-2 ${
+                className={`text-white hover:text-[#a08961] font-medium text-sm transition-colors duration-200 py-1 border-b-2 ${
                   isActive("/colleges")
-                    ? "border-[#D43134] text-gray-900"
+                    ? "border-[#a08961] text-[#a08961]"
                     : "border-transparent"
                 }`}
               >
@@ -85,9 +85,9 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/mentors"
-                className={`text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors duration-200 py-1 border-b-2 ${
+                className={`text-white hover:text-[#a08961] font-medium text-sm transition-colors duration-200 py-1 border-b-2 ${
                   isActive("/mentors")
-                    ? "border-[#D43134] text-gray-900"
+                    ? "border-[#a08961] text-[#a08961]"
                     : "border-transparent"
                 }`}
               >
@@ -95,9 +95,9 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/compare-colleges"
-                className={`text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors duration-200 py-1 border-b-2 ${
+                className={`text-white hover:text-[#a08961] font-medium text-sm transition-colors duration-200 py-1 border-b-2 ${
                   isActive("/compare")
-                    ? "border-[#D43134] text-gray-900"
+                    ? "border-[#a08961] text-[#a08961]"
                     : "border-transparent"
                 }`}
               >
@@ -105,26 +105,11 @@ const Navbar = () => {
               </Link>
             </div>
 
-            <Link
-              to="/add-college"
-              className="bg-[#D43134] text-white px-3 py-1.5 rounded text-sm font-medium hover:bg-[#b92c2f] transition-colors duration-200 shadow-sm"
-            >
-              Add College
-            </Link>
-
-            <Link
-              to="/update-college"
-              className="bg-[#D43134] text-white px-3 py-1.5 rounded text-sm font-medium hover:bg-[#b92c2f] transition-colors duration-200 shadow-sm"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Update College
-            </Link>
-
             {/* User Profile Dropdown */}
-            {user && (
+            {user ? (
               <div className="relative user-dropdown">
                 <div
-                  className="flex items-center cursor-pointer gap-2 border border-[#a08961]/20 rounded-full px-3 py-1.5 hover:bg-[#a08961]/10 transition-all"
+                  className="flex items-center cursor-pointer gap-2 border border-[#a08961]/20 rounded-full px-3 py-1.5 hover:bg-[#a08961]/20 transition-all"
                   onClick={() => setShowUserDropdown(!showUserDropdown)}
                 >
                   <img
@@ -135,30 +120,37 @@ const Navbar = () => {
                 </div>
 
                 {showUserDropdown && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-[#a08961]/10">
                     <Link
                       to={`/user/${user._id}`}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      className="block px-4 py-2 text-sm text-[#062f2e] hover:bg-[#a08961]/10"
                     >
                       Profile
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      className="block w-full text-left px-4 py-2 text-sm text-[#062f2e] hover:bg-[#a08961]/10"
                     >
                       Log Out
                     </button>
                   </div>
                 )}
               </div>
+            ) : (
+              <Link
+                to="/auth"
+                className="bg-[#a08961] text-white px-4 py-1.5 rounded text-sm font-medium hover:bg-[#845c36] transition-colors duration-200 shadow-sm"
+              >
+                Login / Register
+              </Link>
             )}
           </div>
 
           {/* Mobile Controls */}
           <div className="md:hidden flex items-center space-x-4">
             {user && (
-              <Link to={`/user/${user._id}`} className="text-gray-600">
-                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-200">
+              <Link to={`/user/${user._id}`} className="text-white">
+                <div className="w-8 h-8 rounded-full bg-[#a08961]/20 flex items-center justify-center overflow-hidden border border-[#a08961]/20">
                   <img src="/user-icon.svg" alt="Profile" className="w-5 h-5" />
                 </div>
               </Link>
@@ -166,7 +158,7 @@ const Navbar = () => {
 
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-600 hover:text-gray-900 focus:outline-none"
+              className="text-white hover:text-[#a08961] focus:outline-none"
             >
               <svg
                 className="w-6 h-6"
@@ -196,14 +188,14 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-3 border-t border-gray-100 animate-fadeIn">
+          <div className="md:hidden py-3 border-t border-[#a08961]/20 animate-fadeIn">
             <div className="flex flex-col space-y-3">
               <Link
                 to="/"
                 className={`px-2 py-1.5 rounded-md ${
                   isActive("/")
-                    ? "bg-gray-50 text-gray-900 font-medium"
-                    : "text-gray-600"
+                    ? "bg-[#a08961]/20 text-white font-medium"
+                    : "text-white hover:text-[#a08961]"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -213,8 +205,8 @@ const Navbar = () => {
                 to="/about"
                 className={`px-2 py-1.5 rounded-md ${
                   isActive("/about")
-                    ? "bg-gray-50 text-gray-900 font-medium"
-                    : "text-gray-600"
+                    ? "bg-[#a08961]/20 text-white font-medium"
+                    : "text-white hover:text-[#a08961]"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -224,8 +216,8 @@ const Navbar = () => {
                 to="/colleges"
                 className={`px-2 py-1.5 rounded-md ${
                   isActive("/colleges")
-                    ? "bg-gray-50 text-gray-900 font-medium"
-                    : "text-gray-600"
+                    ? "bg-[#a08961]/20 text-white font-medium"
+                    : "text-white hover:text-[#a08961]"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -235,8 +227,8 @@ const Navbar = () => {
                 to="/mentors"
                 className={`px-2 py-1.5 rounded-md ${
                   isActive("/mentors")
-                    ? "bg-gray-50 text-gray-900 font-medium"
-                    : "text-gray-600"
+                    ? "bg-[#a08961]/20 text-white font-medium"
+                    : "text-white hover:text-[#a08961]"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -246,42 +238,39 @@ const Navbar = () => {
                 to="/compare-colleges"
                 className={`px-2 py-1.5 rounded-md ${
                   isActive("/compare")
-                    ? "bg-gray-50 text-gray-900 font-medium"
-                    : "text-gray-600"
+                    ? "bg-[#a08961]/20 text-white font-medium"
+                    : "text-white hover:text-[#a08961]"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Compare
               </Link>
-              <div className="pt-2">
-                <Link
-                  to="/add-college"
-                  className="block bg-[#D43134] text-white px-4 py-2 rounded text-sm font-medium hover:bg-[#b92c2f] transition-colors duration-200 text-center shadow-sm"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Add College
-                </Link>
-              </div>
-              <div className="pt-2">
-                <Link
-                  to="/update-college"
-                  className="block bg-[#D43134] text-white px-4 py-2 rounded text-sm font-medium hover:bg-[#b92c2f] transition-colors duration-200 text-center shadow-sm"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Update College
-                </Link>
-              </div>
-              <div className="pt-1">
-                <button
-                  className="w-full bg-gray-50 text-gray-700 px-4 py-2 rounded text-sm font-medium hover:bg-gray-100 transition-colors duration-200 text-center border border-gray-200"
-                  onClick={() => {
-                    handleLogout();
-                    setIsMenuOpen(false);
-                  }}
-                >
-                  Log Out
-                </button>
-              </div>
+
+              {!user && (
+                <div className="pt-2">
+                  <Link
+                    to="/auth"
+                    className="block bg-[#a08961] text-white px-4 py-2 rounded text-sm font-medium hover:bg-[#845c36] transition-colors duration-200 text-center shadow-sm"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Login / Register
+                  </Link>
+                </div>
+              )}
+
+              {user && (
+                <div className="pt-1">
+                  <button
+                    className="w-full bg-[#a08961]/20 text-white px-4 py-2 rounded text-sm font-medium hover:bg-[#a08961]/30 transition-colors duration-200 text-center border border-[#a08961]/30"
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    Log Out
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
