@@ -277,9 +277,9 @@ const Auth = () => {
 
   return (
     <FadeWrapper>
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 flex items-stretch">
+      <div className="min-h-screen bg-gradient-to-br from-[#f5f3ee] to-[#f5f3ee]/90 flex items-stretch">
         <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-700">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#062f2e] to-[#062f2e]/90">
             <div className="absolute inset-0 opacity-10">
               <svg width="100%" height="100%">
                 <defs>
@@ -349,7 +349,7 @@ const Auth = () => {
                   InsightScholar
                 </h1>
               </div>
-              <p className="text-indigo-100 mt-5 max-w-md text-lg">
+              <p className="text-white/90 mt-5 max-w-md text-lg">
                 Connect with college communities, find mentors, and make
                 informed academic decisions.
               </p>
@@ -376,7 +376,7 @@ const Auth = () => {
               transition={{ duration: 0.5 }}
               className="bg-white rounded-2xl shadow-xl overflow-hidden"
             >
-              <div className="relative h-16 bg-gradient-to-r from-indigo-500 to-purple-600 overflow-hidden">
+              <div className="relative h-16 bg-gradient-to-r from-[#062f2e] to-[#062f2e]/80 overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-20 pointer-events-none"
                   style={{ zIndex: 1 }}
@@ -402,11 +402,11 @@ const Auth = () => {
                         ></animate>
                         <stop
                           offset="0%"
-                          stopColor="rgba(255, 0, 255, 1)"
+                          stopColor="rgba(160, 137, 97, 1)"
                         ></stop>
                         <stop
                           offset="100%"
-                          stopColor="rgba(255, 0, 255, 0)"
+                          stopColor="rgba(160, 137, 97, 0)"
                         ></stop>
                       </radialGradient>
                     </defs>
@@ -474,9 +474,9 @@ const Auth = () => {
                     className="text-center"
                   >
                     <div className="flex justify-center mb-6">
-                      <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+                      <div className="w-16 h-16 rounded-full bg-[#a08961]/20 flex items-center justify-center">
                         <svg
-                          className="w-8 h-8 text-green-600"
+                          className="w-8 h-8 text-[#845c36]"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -490,21 +490,21 @@ const Auth = () => {
                         </svg>
                       </div>
                     </div>
-                    <h2 className="text-2xl font-bold mb-4 text-gray-800">
+                    <h2 className="text-2xl font-bold mb-4 text-[#062f2e]">
                       Verification Sent!
                     </h2>
                     <p className="mb-3 text-gray-600">
                       Please check your email at{" "}
-                      <span className="font-semibold text-indigo-600">
+                      <span className="font-semibold text-[#845c36]">
                         {registeredEmail}
                       </span>{" "}
                       to verify your account.
                     </p>
-                    <div className="mb-6 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-md">
+                    <div className="mb-6 p-3 bg-[#a08961]/10 border-l-4 border-[#a08961] rounded-r-md">
                       <div className="flex items-start">
                         <div className="flex-shrink-0">
                           <svg
-                            className="h-5 w-5 text-yellow-500"
+                            className="h-5 w-5 text-[#845c36]"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -518,10 +518,10 @@ const Auth = () => {
                           </svg>
                         </div>
                         <div className="ml-3">
-                          <p className="text-sm text-yellow-700 font-medium">
+                          <p className="text-sm text-[#845c36] font-medium">
                             Important!
                           </p>
-                          <p className="text-sm text-yellow-600">
+                          <p className="text-sm text-[#062f2e]/70">
                             Please check your <strong>spam/junk folder</strong>{" "}
                             if you don't see the verification email in your
                             inbox within a few minutes.
@@ -531,7 +531,7 @@ const Auth = () => {
                     </div>
                     <button
                       onClick={() => handleResendVerification(registeredEmail)}
-                      className="bg-indigo-100 text-indigo-600 px-6 py-2 rounded-lg font-medium hover:bg-indigo-200 transition-colors duration-300 inline-flex items-center gap-2"
+                      className="bg-[#062f2e]/10 text-[#062f2e] px-6 py-2 rounded-lg font-medium hover:bg-[#062f2e]/20 transition-colors duration-300 inline-flex items-center gap-2"
                     >
                       <svg
                         className="w-4 h-4"
@@ -554,7 +554,7 @@ const Auth = () => {
                           setIsSignup(false);
                           setRegistrationSuccess(false);
                         }}
-                        className="text-indigo-600 hover:text-indigo-800 font-medium"
+                        className="text-[#845c36] hover:text-[#062f2e] font-medium"
                       >
                         Back to Login
                       </button>
@@ -567,7 +567,7 @@ const Auth = () => {
                     transition={{ duration: 0.5 }}
                     key={isSignup ? "signup" : "login"}
                   >
-                    <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+                    <h2 className="text-2xl font-bold text-[#062f2e] mb-6 text-center">
                       {isSignup ? "Create your account" : "Welcome back"}
                     </h2>
                     <form
@@ -579,13 +579,13 @@ const Auth = () => {
                       {isSignup && (
                         <>
                           <div className="space-y-2">
-                            <label className="text-sm font-medium text-gray-700 block">
+                            <label className="text-sm font-medium text-[#062f2e] block">
                               Full Name <span className="text-red-500">*</span>
                             </label>
                             <div className="relative">
                               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg
-                                  className="h-5 w-5 text-gray-400"
+                                  className="h-5 w-5 text-[#a08961]"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"
@@ -604,20 +604,20 @@ const Auth = () => {
                                 value={signupForm.name}
                                 onChange={handleSignupChange}
                                 placeholder="John Doe"
-                                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                className="w-full pl-10 pr-4 py-2.5 border border-[#a08961]/30 rounded-lg focus:ring-2 focus:ring-[#a08961] focus:border-[#a08961]"
                                 required
                               />
                             </div>
                           </div>
 
                           <div className="space-y-2">
-                            <label className="text-sm font-medium text-gray-700 block">
+                            <label className="text-sm font-medium text-[#062f2e] block">
                               College
                             </label>
                             <div className="relative">
                               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg
-                                  className="h-5 w-5 text-gray-400"
+                                  className="h-5 w-5 text-[#a08961]"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"
@@ -634,7 +634,7 @@ const Auth = () => {
                                 name="college"
                                 value={signupForm.college}
                                 onChange={handleSignupChange}
-                                className="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent appearance-none"
+                                className="w-full pl-10 pr-10 py-2.5 border border-[#a08961]/30 rounded-lg focus:ring-2 focus:ring-[#a08961] focus:border-[#a08961] appearance-none"
                               >
                                 <option value="">Select College</option>
                                 <option value="notInCollege">
@@ -648,7 +648,7 @@ const Auth = () => {
                               </select>
                               <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                                 <svg
-                                  className="w-5 h-5 text-gray-400"
+                                  className="w-5 h-5 text-[#a08961]"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"
@@ -666,7 +666,7 @@ const Auth = () => {
                               selectedCollege &&
                               selectedCollege.emailDomains &&
                               selectedCollege.emailDomains.length > 0 && (
-                                <p className="text-sm text-gray-500 mt-1">
+                                <p className="text-sm text-[#062f2e]/70 mt-1">
                                   This college requires an email from:{" "}
                                   {selectedCollege.emailDomains.join(", ")}
                                 </p>
@@ -677,13 +677,13 @@ const Auth = () => {
                             signupForm.college !== "notInCollege" && (
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-1">
                                 <div className="space-y-2">
-                                  <label className="text-sm font-medium text-gray-700 block">
+                                  <label className="text-sm font-medium text-[#062f2e] block">
                                     Major
                                   </label>
                                   <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                       <svg
-                                        className="h-5 w-5 text-gray-400"
+                                        className="h-5 w-5 text-[#a08961]"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -702,19 +702,19 @@ const Auth = () => {
                                       value={signupForm.major}
                                       onChange={handleSignupChange}
                                       placeholder="Computer Science"
-                                      className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                      className="w-full pl-10 pr-4 py-2.5 border border-[#a08961]/30 rounded-lg focus:ring-2 focus:ring-[#a08961] focus:border-[#a08961]"
                                     />
                                   </div>
                                 </div>
 
                                 <div className="space-y-2">
-                                  <label className="text-sm font-medium text-gray-700 block">
+                                  <label className="text-sm font-medium text-[#062f2e] block">
                                     Graduation Year
                                   </label>
                                   <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                       <svg
-                                        className="h-5 w-5 text-gray-400"
+                                        className="h-5 w-5 text-[#a08961]"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -733,7 +733,7 @@ const Auth = () => {
                                       value={signupForm.year}
                                       onChange={handleSignupChange}
                                       placeholder="2025"
-                                      className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                      className="w-full pl-10 pr-4 py-2.5 border border-[#a08961]/30 rounded-lg focus:ring-2 focus:ring-[#a08961] focus:border-[#a08961]"
                                     />
                                   </div>
                                 </div>
@@ -741,13 +741,13 @@ const Auth = () => {
                             )}
 
                           <div className="space-y-2">
-                            <label className="text-sm font-medium text-gray-700 block">
+                            <label className="text-sm font-medium text-[#062f2e] block">
                               LinkedIn (optional)
                             </label>
                             <div className="relative">
                               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg
-                                  className="h-5 w-5 text-gray-400"
+                                  className="h-5 w-5 text-[#a08961]"
                                   fill="currentColor"
                                   viewBox="0 0 24 24"
                                 >
@@ -760,7 +760,7 @@ const Auth = () => {
                                 value={signupForm.linkedIn}
                                 onChange={handleSignupChange}
                                 placeholder="linkedin.com/in/username"
-                                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                className="w-full pl-10 pr-4 py-2.5 border border-[#a08961]/30 rounded-lg focus:ring-2 focus:ring-[#a08961] focus:border-[#a08961]"
                               />
                             </div>
                           </div>
@@ -768,14 +768,14 @@ const Auth = () => {
                       )}
 
                       <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700 block">
+                        <label className="text-sm font-medium text-[#062f2e] block">
                           Email Address{" "}
                           {isSignup && <span className="text-red-500">*</span>}
                         </label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg
-                              className="h-5 w-5 text-gray-400"
+                              className="h-5 w-5 text-[#a08961]"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -801,8 +801,8 @@ const Auth = () => {
                             className={`w-full pl-10 pr-4 py-2.5 border ${
                               emailDomainError
                                 ? "border-red-500"
-                                : "border-gray-300"
-                            } rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+                                : "border-[#a08961]/30"
+                            } rounded-lg focus:ring-2 focus:ring-[#a08961] focus:border-[#a08961]`}
                             required
                           />
                         </div>
@@ -841,7 +841,7 @@ const Auth = () => {
                             ) : (
                               <>
                                 <svg
-                                  className="w-4 h-4 text-green-500 mr-1"
+                                  className="w-4 h-4 text-[#845c36] mr-1"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"
@@ -853,7 +853,7 @@ const Auth = () => {
                                     d="M5 13l4 4L19 7"
                                   />
                                 </svg>
-                                <span className="text-sm text-green-500">
+                                <span className="text-sm text-[#845c36]">
                                   Email domain verified for this college
                                 </span>
                               </>
@@ -863,17 +863,17 @@ const Auth = () => {
 
                       <div className="space-y-2">
                         {isSignup ? (
-                          <label className="text-sm font-medium text-gray-700 block">
+                          <label className="text-sm font-medium text-[#062f2e] block">
                             Password <span className="text-red-500">*</span>
                           </label>
                         ) : (
                           <div className="flex items-center justify-between">
-                            <label className="text-sm font-medium text-gray-700">
+                            <label className="text-sm font-medium text-[#062f2e]">
                               Password
                             </label>
                             <Link
                               to="/forgot-password"
-                              className="text-xs text-indigo-600 hover:text-indigo-800 transition-colors duration-200"
+                              className="text-xs text-[#845c36] hover:text-[#062f2e] transition-colors duration-200"
                             >
                               Forgot password?
                             </Link>
@@ -882,7 +882,7 @@ const Auth = () => {
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg
-                              className="h-5 w-5 text-gray-400"
+                              className="h-5 w-5 text-[#a08961]"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -907,7 +907,7 @@ const Auth = () => {
                               isSignup ? handleSignupChange : handleLoginChange
                             }
                             placeholder="••••••••"
-                            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            className="w-full pl-10 pr-4 py-2.5 border border-[#a08961]/30 rounded-lg focus:ring-2 focus:ring-[#a08961] focus:border-[#a08961]"
                             required
                             minLength={8}
                           />
@@ -920,14 +920,26 @@ const Auth = () => {
                                 Password Strength:
                               </span>
                               <span
-                                className={`text-xs font-medium text-${passwordStrength.color}`}
+                                className={`text-xs font-medium ${
+                                  passwordStrength.score >= 4
+                                    ? "text-[#845c36]"
+                                    : passwordStrength.score >= 3
+                                    ? "text-yellow-500"
+                                    : "text-red-500"
+                                }`}
                               >
                                 {passwordStrength.message}
                               </span>
                             </div>
                             <div className="w-full bg-gray-200 rounded-full h-1.5">
                               <div
-                                className={`bg-${passwordStrength.color} h-1.5 rounded-full`}
+                                className={`${
+                                  passwordStrength.score >= 4
+                                    ? "bg-[#845c36]"
+                                    : passwordStrength.score >= 3
+                                    ? "bg-yellow-500"
+                                    : "bg-red-500"
+                                } h-1.5 rounded-full`}
                                 style={{
                                   width: `${Math.min(
                                     100,
@@ -936,7 +948,7 @@ const Auth = () => {
                                 }}
                               ></div>
                             </div>
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-[#062f2e]/70 mt-1">
                               Use 8+ characters with a mix of letters, numbers &
                               symbols
                             </p>
@@ -948,7 +960,7 @@ const Auth = () => {
                         <button
                           type="button"
                           onClick={handleLoginSubmit}
-                          className="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2 relative z-20"
+                          className="w-full py-2.5 bg-gradient-to-r from-[#062f2e] to-[#062f2e]/80 text-white font-medium rounded-lg transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2 relative z-20 hover:from-[#845c36] hover:to-[#845c36]"
                         >
                           <svg
                             className="w-5 h-5"
@@ -970,7 +982,7 @@ const Auth = () => {
                       {isSignup && (
                         <button
                           type="submit"
-                          className="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2 relative z-20"
+                          className="w-full py-2.5 bg-gradient-to-r from-[#062f2e] to-[#062f2e]/80 text-white font-medium rounded-lg transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2 relative z-20 hover:from-[#845c36] hover:to-[#845c36]"
                         >
                           <svg
                             className="w-5 h-5"
@@ -992,29 +1004,16 @@ const Auth = () => {
                   </motion.div>
                 )}
               </div>
-
-              <div className="bg-gray-50 px-8 py-4 border-t border-gray-100">
-                <div className="text-center text-gray-600 text-sm">
-                  By continuing, you agree to InsightScholar's{" "}
-                  <a href="#" className="text-indigo-600 hover:underline">
-                    Terms of Service
-                  </a>{" "}
-                  and{" "}
-                  <a href="#" className="text-indigo-600 hover:underline">
-                    Privacy Policy
-                  </a>
-                </div>
-              </div>
             </motion.div>
 
             <div className="mt-8 text-center lg:hidden">
               <div className="flex items-center justify-center space-x-2">
                 <img src="/logonobg2.png" alt="Logo" className="h-8 w-8" />
-                <h2 className="text-xl font-semibold text-gray-800">
+                <h2 className="text-xl font-semibold text-[#062f2e]">
                   InsightScholar
                 </h2>
               </div>
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="mt-2 text-sm text-[#062f2e]/70">
                 © {new Date().getFullYear()} InsightScholar. All rights
                 reserved.
               </p>

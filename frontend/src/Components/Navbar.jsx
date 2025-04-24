@@ -55,9 +55,9 @@ const Navbar = () => {
             <div className="flex space-x-5">
               <Link
                 to="/"
-                className={`text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors duration-200 py-1 border-b-2 ${
+                className={`text-gray-600 hover:text-[#062f2e] font-medium transition-colors py-1 border-b-2 ${
                   isActive("/")
-                    ? "border-[#D43134] text-gray-900"
+                    ? "border-[#062f2e] text-[#062f2e]"
                     : "border-transparent"
                 }`}
               >
@@ -123,18 +123,16 @@ const Navbar = () => {
             {/* User Profile Dropdown */}
             {user && (
               <div className="relative user-dropdown">
-                <button
+                <div
+                  className="flex items-center cursor-pointer gap-2 border border-[#a08961]/20 rounded-full px-3 py-1.5 hover:bg-[#a08961]/10 transition-all"
                   onClick={() => setShowUserDropdown(!showUserDropdown)}
-                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900 group"
                 >
-                  <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-200 group-hover:border-gray-300">
-                    <img
-                      src="/user-icon.svg"
-                      alt="Profile"
-                      className="w-5 h-5"
-                    />
-                  </div>
-                </button>
+                  <img
+                    src={user.profilePic || "/user-icon.svg"}
+                    alt={user.name}
+                    className="w-8 h-8 rounded-full border border-[#a08961]/30"
+                  />
+                </div>
 
                 {showUserDropdown && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">

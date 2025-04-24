@@ -18,7 +18,6 @@ import CollegeProfile from "./Pages/CollegeProfile";
 import CollegeList from "./Pages/CollegeList";
 import UserProfile from "./Pages/UserProfile";
 import StudentMentors from "./Pages/StudentMentors";
-import CommentsPage from "./Pages/CommentsPage";
 import InterestsSelection from "./Pages/InterestsSelection";
 import UpdateProfile from "./Pages/UpdateProfile";
 import HelpCenter from "./Pages/HelpCenter";
@@ -122,10 +121,7 @@ const AnimatedRoutes = () => {
           path="/mentors"
           element={<PrivateRoute element={<StudentMentors />} />}
         />
-        <Route
-          path="/comments"
-          element={<PrivateRoute element={<CommentsPage />} />}
-        />
+
         <Route path="/interests" element={<InterestsSelection />} />
         <Route
           path="/update-profile"

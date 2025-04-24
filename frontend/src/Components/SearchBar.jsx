@@ -70,24 +70,24 @@ const SearchBar = () => {
 
   return (
     <div className="relative" ref={searchRef}>
-      <div className="relative">
+      <div className="relative w-full">
         <input
           type="text"
           value={searchTerm}
           onChange={handleInputChange}
           onKeyPress={handleKeyPress}
           placeholder="Search colleges..."
-          className="w-full px-4 py-2 rounded-lg border border-[#D43134C4]/20 focus:outline-none focus:border-[#D43134C4]"
+          className="w-full px-4 py-2 rounded-lg border border-[#a08961]/20 focus:outline-none focus:border-[#a08961] focus:ring-1 focus:ring-[#a08961]"
         />
         <button
           onClick={handleSearch}
-          className="absolute right-3 top-1/2 -translate-y-1/2 hover:text-[#D43134C4] transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#a08961] hover:text-[#845c36] transition-colors"
         >
           <svg
-            className="w-5 h-5 text-[#484848]"
+            className="w-5 h-5"
             fill="none"
-            stroke="currentColor"
             viewBox="0 0 24 24"
+            stroke="currentColor"
           >
             <path
               strokeLinecap="round"
@@ -106,27 +106,14 @@ const SearchBar = () => {
             {filteredColleges.map((college) => (
               <li
                 key={college._id}
-                className="px-4 py-2 hover:bg-[#D43134C4]/10 cursor-pointer text-[#484848]"
+                className="px-4 py-2 hover:bg-[#a08961]/10 cursor-pointer"
               >
                 <Link
                   to={`/college/${college._id}`}
-                  className="flex items-center space-x-2 w-full"
+                  className="text-[#062f2e] hover:text-[#845c36]"
                   onClick={() => setIsOpen(false)}
                 >
-                  <svg
-                    className="w-4 h-4 text-[#484848]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                    />
-                  </svg>
-                  <span>{college.name}</span>
+                  {college.name}
                 </Link>
               </li>
             ))}

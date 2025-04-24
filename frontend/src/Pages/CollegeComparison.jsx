@@ -188,17 +188,17 @@ const CollegeComparison = () => {
 
   // Render loading placeholder for a college card
   const renderCollegeLoadingCard = (index) => (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 animate-pulse">
-      <div className="h-2 md:h-3 bg-gradient-to-r from-indigo-300 to-purple-300"></div>
-      <div className="relative h-40 md:h-48 bg-gray-200"></div>
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-[#a08961]/20 animate-pulse">
+      <div className="h-2 md:h-3 bg-gradient-to-r from-[#062f2e]/50 to-[#845c36]/50"></div>
+      <div className="relative h-40 md:h-48 bg-[#a08961]/20"></div>
       <div className="p-4 md:p-5">
-        <div className="h-6 bg-gray-200 rounded mb-2"></div>
-        <div className="h-4 bg-gray-100 rounded mb-4 w-2/3"></div>
+        <div className="h-6 bg-[#a08961]/20 rounded mb-2"></div>
+        <div className="h-4 bg-[#a08961]/10 rounded mb-4 w-2/3"></div>
         <div className="grid grid-cols-2 gap-2 mb-4">
-          <div className="h-16 bg-gray-50 rounded"></div>
-          <div className="h-16 bg-gray-50 rounded"></div>
+          <div className="h-16 bg-[#f5f3ee] rounded"></div>
+          <div className="h-16 bg-[#f5f3ee] rounded"></div>
         </div>
-        <div className="h-8 bg-indigo-100 rounded"></div>
+        <div className="h-8 bg-[#a08961]/10 rounded"></div>
       </div>
     </div>
   );
@@ -214,10 +214,10 @@ const CollegeComparison = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl w-full max-w-md p-8 flex flex-col items-center">
             <Loading />
-            <p className="mt-4 text-gray-600">Loading college details...</p>
+            <p className="mt-4 text-[#062f2e]/70">Loading college details...</p>
             <button
               onClick={() => setMobileView(null)}
-              className="mt-6 px-4 py-2 bg-gray-200 rounded-lg"
+              className="mt-6 px-4 py-2 bg-[#f5f3ee] rounded-lg text-[#062f2e] hover:bg-[#a08961]/20 transition-colors"
             >
               Cancel
             </button>
@@ -229,11 +229,11 @@ const CollegeComparison = () => {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-          <div className="sticky top-0 bg-white p-4 border-b flex justify-between items-center">
-            <h3 className="text-xl font-bold">{college.name}</h3>
+          <div className="sticky top-0 bg-white p-4 border-b border-[#a08961]/20 flex justify-between items-center">
+            <h3 className="text-xl font-bold text-[#062f2e]">{college.name}</h3>
             <button
               onClick={() => setMobileView(null)}
-              className="p-2 rounded-full hover:bg-gray-100"
+              className="p-2 rounded-full hover:bg-[#f5f3ee] text-[#062f2e]"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -262,57 +262,65 @@ const CollegeComparison = () => {
             />
             <div className="space-y-4">
               <div>
-                <h4 className="font-medium text-gray-700">Location</h4>
-                <p>{college.location || "—"}</p>
+                <h4 className="font-medium text-[#062f2e]">Location</h4>
+                <p className="text-[#062f2e]/70">{college.location || "—"}</p>
               </div>
               <div>
-                <h4 className="font-medium text-gray-700">Type</h4>
-                <p>{college.facts?.type || "—"}</p>
+                <h4 className="font-medium text-[#062f2e]">Type</h4>
+                <p className="text-[#062f2e]/70">
+                  {college.facts?.type || "—"}
+                </p>
               </div>
               <div>
-                <h4 className="font-medium text-gray-700">Founded</h4>
-                <p>{college.facts?.founded || "—"}</p>
+                <h4 className="font-medium text-[#062f2e]">Founded</h4>
+                <p className="text-[#062f2e]/70">
+                  {college.facts?.founded || "—"}
+                </p>
               </div>
               <div>
-                <h4 className="font-medium text-gray-700">
+                <h4 className="font-medium text-[#062f2e]">
                   Student Population
                 </h4>
-                <p>
+                <p className="text-[#062f2e]/70">
                   {college.facts?.totalStudents
                     ? college.facts.totalStudents.toLocaleString()
                     : "—"}
                 </p>
               </div>
               <div>
-                <h4 className="font-medium text-gray-700">Academic Fields</h4>
+                <h4 className="font-medium text-[#062f2e]">Academic Fields</h4>
                 {college.domain?.length > 0 ? (
                   <div className="flex flex-wrap gap-1.5 mt-1">
                     {college.domain.map((field, i) => (
                       <span
                         key={i}
-                        className="inline-block px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs font-medium rounded-full"
+                        className="inline-block px-2.5 py-1 bg-[#a08961]/10 text-[#845c36] text-xs font-medium rounded-full"
                       >
                         {field}
                       </span>
                     ))}
                   </div>
                 ) : (
-                  <p>—</p>
+                  <p className="text-[#062f2e]/70">—</p>
                 )}
               </div>
               <div>
-                <h4 className="font-medium text-gray-700">Community Members</h4>
-                <p>{college.members?.length || "—"}</p>
+                <h4 className="font-medium text-[#062f2e]">
+                  Community Members
+                </h4>
+                <p className="text-[#062f2e]/70">
+                  {college.members?.length || "—"}
+                </p>
               </div>
               <div>
-                <h4 className="font-medium text-gray-700">Description</h4>
-                <p className="text-sm text-gray-600">
+                <h4 className="font-medium text-[#062f2e]">Description</h4>
+                <p className="text-sm text-[#062f2e]/70">
                   {college.description || "—"}
                 </p>
               </div>
               <Link
                 to={`/college/${college._id}`}
-                className="block w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-center rounded-lg transition-colors font-medium mt-4"
+                className="block w-full py-3 bg-[#062f2e] hover:bg-[#845c36] text-white text-center rounded-lg transition-colors font-medium mt-4"
               >
                 View College Profile
               </Link>
@@ -325,17 +333,17 @@ const CollegeComparison = () => {
 
   return (
     <FadeWrapper>
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col">
+      <div className="min-h-screen bg-[#f5f3ee] flex flex-col">
         <Navbar />
 
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-8 md:py-16">
+        <div className="bg-gradient-to-r from-[#062f2e] to-[#062f2e]/80 text-white py-8 md:py-16">
           <div className="container mx-auto px-4 md:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4">
                 Compare Colleges Side by Side
               </h1>
-              <p className="text-indigo-100 text-base md:text-xl">
+              <p className="text-white/80 text-base md:text-xl">
                 Make informed decisions by comparing key features and statistics
               </p>
             </div>
@@ -367,11 +375,11 @@ const CollegeComparison = () => {
                           e.stopPropagation();
                           setActiveDropdown(index);
                         }}
-                        className="w-full p-3 md:p-4 pl-10 md:pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm bg-white"
+                        className="w-full p-3 md:p-4 pl-10 md:pl-12 border border-[#a08961]/30 rounded-xl focus:ring-2 focus:ring-[#a08961] focus:border-[#a08961] shadow-sm bg-white"
                       />
                       <div className="absolute inset-y-0 left-0 pl-3 md:pl-4 flex items-center pointer-events-none">
                         <svg
-                          className="h-5 w-5 text-indigo-600"
+                          className="h-5 w-5 text-[#a08961]"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -388,18 +396,18 @@ const CollegeComparison = () => {
 
                     {/* Dropdown results */}
                     {activeDropdown === index && searchTerms[index] && (
-                      <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-72 overflow-auto">
+                      <div className="absolute z-20 w-full mt-1 bg-white border border-[#a08961]/20 rounded-lg shadow-xl max-h-72 overflow-auto">
                         {getFilteredColleges(index).length > 0 ? (
                           getFilteredColleges(index).map((college) => (
                             <div
                               key={college._id}
-                              className="p-3 md:p-4 hover:bg-indigo-50 cursor-pointer border-b last:border-b-0 transition duration-150 college-search-result"
+                              className="p-3 md:p-4 hover:bg-[#a08961]/10 cursor-pointer border-b border-[#a08961]/10 last:border-b-0 transition duration-150 college-search-result"
                               onClick={(event) => {
                                 handleSelectCollege(index, college._id, event);
                               }}
                             >
                               <div className="flex items-center">
-                                <div className="flex-shrink-0 h-10 w-10 md:h-12 md:w-12 bg-gray-100 rounded-lg overflow-hidden">
+                                <div className="flex-shrink-0 h-10 w-10 md:h-12 md:w-12 bg-[#f5f3ee] rounded-lg overflow-hidden">
                                   <img
                                     src={
                                       college.profilePic ||
@@ -410,10 +418,10 @@ const CollegeComparison = () => {
                                   />
                                 </div>
                                 <div className="ml-3 md:ml-4">
-                                  <p className="font-semibold text-gray-800 text-sm md:text-base">
+                                  <p className="font-semibold text-[#062f2e] text-sm md:text-base">
                                     {college.name}
                                   </p>
-                                  <p className="text-xs md:text-sm text-gray-500">
+                                  <p className="text-xs md:text-sm text-[#062f2e]/70">
                                     {college.location}
                                   </p>
                                 </div>
@@ -421,7 +429,7 @@ const CollegeComparison = () => {
                             </div>
                           ))
                         ) : (
-                          <div className="p-4 text-gray-500 text-center">
+                          <div className="p-4 text-[#062f2e]/50 text-center">
                             No colleges found
                           </div>
                         )}
@@ -433,9 +441,9 @@ const CollegeComparison = () => {
                   {loadingStates[index] ? (
                     renderCollegeLoadingCard(index)
                   ) : selectedColleges[index] ? (
-                    <div className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all hover:scale-[1.01] md:hover:scale-[1.02] hover:shadow-xl border border-gray-100">
+                    <div className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all hover:scale-[1.01] md:hover:scale-[1.02] hover:shadow-xl border border-[#a08961]/10">
                       {/* College Header with Color Band */}
-                      <div className="h-2 md:h-3 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+                      <div className="h-2 md:h-3 bg-gradient-to-r from-[#062f2e] to-[#845c36]"></div>
 
                       {/* College Image */}
                       <div className="relative h-40 md:h-48 overflow-hidden">
@@ -454,7 +462,7 @@ const CollegeComparison = () => {
                             newSelected[index] = null;
                             setSelectedColleges(newSelected);
                           }}
-                          className="absolute top-2 right-2 md:top-3 md:right-3 bg-white bg-opacity-80 hover:bg-opacity-100 p-1 md:p-1.5 rounded-full text-gray-700 hover:text-red-600 transition-colors"
+                          className="absolute top-2 right-2 md:top-3 md:right-3 bg-white bg-opacity-80 hover:bg-opacity-100 p-1 md:p-1.5 rounded-full text-[#062f2e]/70 hover:text-red-600 transition-colors"
                           title="Remove college"
                         >
                           <svg
@@ -474,32 +482,32 @@ const CollegeComparison = () => {
 
                       {/* Partial data indicator if needed */}
                       {selectedColleges[index].isPartialData && (
-                        <div className="bg-yellow-50 px-3 py-1 text-xs text-yellow-700 text-center">
+                        <div className="bg-[#a08961]/10 px-3 py-1 text-xs text-[#845c36] text-center">
                           Loading complete details...
                         </div>
                       )}
 
                       {/* College Info */}
                       <div className="p-4 md:p-5">
-                        <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-1 truncate">
+                        <h3 className="text-lg md:text-xl font-bold text-[#062f2e] mb-1 truncate">
                           {selectedColleges[index].name}
                         </h3>
-                        <p className="text-xs md:text-sm text-gray-500 mb-2 md:mb-3 truncate">
+                        <p className="text-xs md:text-sm text-[#062f2e]/70 mb-2 md:mb-3 truncate">
                           {selectedColleges[index].location ||
                             "Location not specified"}
                         </p>
 
                         {/* Quick Stats */}
                         <div className="grid grid-cols-2 gap-2 text-xs md:text-sm mb-3 md:mb-4">
-                          <div className="bg-gray-50 p-1.5 md:p-2 rounded">
-                            <p className="text-gray-500">Type</p>
-                            <p className="font-medium truncate">
+                          <div className="bg-[#f5f3ee] p-1.5 md:p-2 rounded">
+                            <p className="text-[#845c36]">Type</p>
+                            <p className="font-medium truncate text-[#062f2e]">
                               {selectedColleges[index].facts?.type || "—"}
                             </p>
                           </div>
-                          <div className="bg-gray-50 p-1.5 md:p-2 rounded">
-                            <p className="text-gray-500">Founded</p>
-                            <p className="font-medium truncate">
+                          <div className="bg-[#f5f3ee] p-1.5 md:p-2 rounded">
+                            <p className="text-[#845c36]">Founded</p>
+                            <p className="font-medium truncate text-[#062f2e]">
                               {selectedColleges[index].facts?.founded || "—"}
                             </p>
                           </div>
@@ -509,14 +517,14 @@ const CollegeComparison = () => {
                           {/* Mobile: View Details Button */}
                           <button
                             onClick={() => setMobileView(index)}
-                            className="md:hidden flex-grow py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-center rounded-lg transition-colors text-xs font-medium"
+                            className="md:hidden flex-grow py-2 bg-[#a08961]/10 hover:bg-[#a08961]/20 text-[#062f2e] text-center rounded-lg transition-colors text-xs font-medium"
                           >
                             See Details
                           </button>
 
                           <Link
                             to={`/college/${selectedColleges[index]._id}`}
-                            className="block flex-grow py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-center rounded-lg transition-colors text-xs md:text-sm font-medium"
+                            className="block flex-grow py-2 bg-[#062f2e] hover:bg-[#845c36] text-white text-center rounded-lg transition-colors text-xs md:text-sm font-medium"
                           >
                             Visit Profile
                           </Link>
@@ -525,7 +533,7 @@ const CollegeComparison = () => {
                     </div>
                   ) : (
                     <div
-                      className="bg-white rounded-xl shadow-lg border border-dashed border-gray-300 p-4 md:p-8 flex flex-col items-center justify-center h-48 md:h-64 text-center cursor-pointer hover:bg-gray-50"
+                      className="bg-white rounded-xl shadow-lg border border-dashed border-[#a08961]/30 p-4 md:p-8 flex flex-col items-center justify-center h-48 md:h-64 text-center cursor-pointer hover:bg-[#f5f3ee]"
                       onClick={(e) => {
                         e.stopPropagation();
                         // Focus the search input for this slot
@@ -540,10 +548,10 @@ const CollegeComparison = () => {
                         }
                       }}
                     >
-                      <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-indigo-100 flex items-center justify-center mb-3 md:mb-4">
+                      <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#a08961]/20 flex items-center justify-center mb-3 md:mb-4">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-6 w-6 md:h-8 md:w-8 text-indigo-500"
+                          className="h-6 w-6 md:h-8 md:w-8 text-[#845c36]"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -556,10 +564,10 @@ const CollegeComparison = () => {
                           />
                         </svg>
                       </div>
-                      <h3 className="text-base md:text-xl font-semibold text-gray-700 mb-1">
+                      <h3 className="text-base md:text-xl font-semibold text-[#062f2e] mb-1">
                         Select College {index + 1}
                       </h3>
-                      <p className="text-xs md:text-sm text-gray-500 mb-4">
+                      <p className="text-xs md:text-sm text-[#062f2e]/70 mb-4">
                         Use search to pick a college
                       </p>
                     </div>
@@ -568,32 +576,32 @@ const CollegeComparison = () => {
               ))}
 
               {/* Decorative elements */}
-              <div className="absolute -z-10 top-1/4 left-0 w-40 h-40 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-full blur-3xl opacity-40"></div>
-              <div className="absolute -z-10 bottom-1/4 right-0 w-40 h-40 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full blur-3xl opacity-40"></div>
+              <div className="absolute -z-10 top-1/4 left-0 w-40 h-40 bg-gradient-to-br from-[#a08961]/20 to-[#a08961]/30 rounded-full blur-3xl opacity-40"></div>
+              <div className="absolute -z-10 bottom-1/4 right-0 w-40 h-40 bg-gradient-to-br from-[#845c36]/20 to-[#845c36]/30 rounded-full blur-3xl opacity-40"></div>
             </div>
 
             {/* Comparison Table Section - Desktop */}
             <div className="mt-8 md:mt-12 mx-auto hidden md:block">
-              <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6 text-center">
+              <h2 className="text-xl md:text-2xl font-bold text-[#062f2e] mb-4 md:mb-6 text-center">
                 Detailed Comparison
               </h2>
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-[#a08961]/10">
                 {/* College Names - Header Row */}
-                <div className="grid grid-cols-4 border-b border-gray-200">
-                  <div className="p-4 md:p-6 font-semibold text-gray-500 bg-gray-50 flex items-center">
-                    <h3 className="text-base md:text-lg font-semibold text-indigo-800">
+                <div className="grid grid-cols-4 border-b border-[#a08961]/20">
+                  <div className="p-4 md:p-6 font-semibold text-[#062f2e]/70 bg-[#f5f3ee] flex items-center">
+                    <h3 className="text-base md:text-lg font-semibold text-[#062f2e]">
                       Specifications
                     </h3>
                   </div>
                   {[0, 1, 2].map((index) => (
                     <div
                       key={index}
-                      className="p-4 md:p-5 font-semibold text-center border-l border-gray-200"
+                      className="p-4 md:p-5 font-semibold text-center border-l border-[#a08961]/20"
                     >
                       {loadingStates[index] ? (
-                        <div className="h-6 bg-gray-200 rounded animate-pulse mx-auto w-3/4"></div>
+                        <div className="h-6 bg-[#a08961]/20 rounded animate-pulse mx-auto w-3/4"></div>
                       ) : (
-                        <h3 className="text-base md:text-lg text-gray-800 truncate">
+                        <h3 className="text-base md:text-lg text-[#062f2e] truncate">
                           {selectedColleges[index]?.name || "Select a College"}
                         </h3>
                       )}
@@ -602,19 +610,19 @@ const CollegeComparison = () => {
                 </div>
 
                 {/* College Images Row */}
-                <div className="grid grid-cols-4 border-b border-gray-200 bg-white">
-                  <div className="p-4 md:p-5 font-medium text-gray-700 flex items-center">
+                <div className="grid grid-cols-4 border-b border-[#a08961]/20 bg-white">
+                  <div className="p-4 md:p-5 font-medium text-[#062f2e] flex items-center">
                     College Image
                   </div>
                   {[0, 1, 2].map((index) => (
                     <div
                       key={index}
-                      className="p-4 md:p-5 text-center border-l border-gray-200 flex items-center justify-center"
+                      className="p-4 md:p-5 text-center border-l border-[#a08961]/20 flex items-center justify-center"
                     >
                       {loadingStates[index] ? (
-                        <div className="w-20 h-20 md:w-24 md:h-24 bg-gray-200 rounded-lg animate-pulse"></div>
+                        <div className="w-20 h-20 md:w-24 md:h-24 bg-[#a08961]/20 rounded-lg animate-pulse"></div>
                       ) : selectedColleges[index] ? (
-                        <div className="w-20 h-20 md:w-24 md:h-24 overflow-hidden rounded-lg border border-gray-200">
+                        <div className="w-20 h-20 md:w-24 md:h-24 overflow-hidden rounded-lg border border-[#a08961]/20">
                           <img
                             src={
                               selectedColleges[index].profilePic ||
@@ -625,10 +633,10 @@ const CollegeComparison = () => {
                           />
                         </div>
                       ) : (
-                        <div className="w-20 h-20 md:w-24 md:h-24 rounded-lg bg-gray-100 flex items-center justify-center">
+                        <div className="w-20 h-20 md:w-24 md:h-24 rounded-lg bg-[#f5f3ee] flex items-center justify-center">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className="h-8 w-8 text-gray-400"
+                            className="h-8 w-8 text-[#a08961]"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -655,11 +663,11 @@ const CollegeComparison = () => {
                 ].map((row, i) => (
                   <div
                     key={i}
-                    className={`grid grid-cols-4 border-b border-gray-200 ${
-                      i % 2 === 0 ? "bg-white" : "bg-gray-50"
+                    className={`grid grid-cols-4 border-b border-[#a08961]/20 ${
+                      i % 2 === 0 ? "bg-white" : "bg-[#f5f3ee]"
                     }`}
                   >
-                    <div className="p-4 md:p-5 font-medium text-gray-700 flex items-center">
+                    <div className="p-4 md:p-5 font-medium text-[#062f2e] flex items-center">
                       <span>{row.label}</span>
                     </div>
                     {[0, 1, 2].map((index) => {
@@ -668,9 +676,9 @@ const CollegeComparison = () => {
                         return (
                           <div
                             key={index}
-                            className="p-4 md:p-5 text-center border-l border-gray-200 flex items-center justify-center"
+                            className="p-4 md:p-5 text-center border-l border-[#a08961]/20 flex items-center justify-center"
                           >
-                            <div className="h-5 bg-gray-200 rounded animate-pulse w-16"></div>
+                            <div className="h-5 bg-[#a08961]/20 rounded animate-pulse w-16"></div>
                           </div>
                         );
                       }
@@ -690,13 +698,13 @@ const CollegeComparison = () => {
                       return (
                         <div
                           key={index}
-                          className="p-4 md:p-5 text-center border-l border-gray-200 flex items-center justify-center"
+                          className="p-4 md:p-5 text-center border-l border-[#a08961]/20 flex items-center justify-center"
                         >
                           <div
                             className={`font-medium ${
                               selectedColleges[index]
-                                ? "text-gray-800"
-                                : "text-gray-400"
+                                ? "text-[#062f2e]"
+                                : "text-[#062f2e]/40"
                             }`}
                           >
                             {value || "—"}
@@ -708,57 +716,57 @@ const CollegeComparison = () => {
                 ))}
 
                 {/* Domains/Fields */}
-                <div className="grid grid-cols-4 border-b border-gray-200 bg-white">
-                  <div className="p-4 md:p-5 font-medium text-gray-700 flex items-center">
+                <div className="grid grid-cols-4 border-b border-[#a08961]/20 bg-white">
+                  <div className="p-4 md:p-5 font-medium text-[#062f2e] flex items-center">
                     Academic Fields
                   </div>
                   {[0, 1, 2].map((index) => (
                     <div
                       key={index}
-                      className="p-4 md:p-5 text-center border-l border-gray-200"
+                      className="p-4 md:p-5 text-center border-l border-[#a08961]/20"
                     >
                       {loadingStates[index] ? (
                         <div className="flex flex-wrap justify-center gap-1.5">
-                          <div className="h-6 w-16 bg-gray-200 rounded-full animate-pulse"></div>
-                          <div className="h-6 w-12 bg-gray-200 rounded-full animate-pulse"></div>
-                          <div className="h-6 w-20 bg-gray-200 rounded-full animate-pulse"></div>
+                          <div className="h-6 w-16 bg-[#a08961]/20 rounded-full animate-pulse"></div>
+                          <div className="h-6 w-12 bg-[#a08961]/20 rounded-full animate-pulse"></div>
+                          <div className="h-6 w-20 bg-[#a08961]/20 rounded-full animate-pulse"></div>
                         </div>
                       ) : selectedColleges[index]?.domain?.length > 0 ? (
                         <div className="flex flex-wrap justify-center gap-1 md:gap-1.5">
                           {selectedColleges[index].domain.map((field, i) => (
                             <span
                               key={i}
-                              className="inline-block px-2 py-0.5 md:px-2.5 md:py-1 bg-indigo-50 text-indigo-700 text-xs font-medium rounded-full"
+                              className="inline-block px-2 py-0.5 md:px-2.5 md:py-1 bg-[#a08961]/10 text-[#845c36] text-xs font-medium rounded-full"
                             >
                               {field}
                             </span>
                           ))}
                         </div>
                       ) : (
-                        <span className="text-gray-400">—</span>
+                        <span className="text-[#062f2e]/40">—</span>
                       )}
                     </div>
                   ))}
                 </div>
 
                 {/* Community Size */}
-                <div className="grid grid-cols-4 border-b border-gray-200 bg-gray-50">
-                  <div className="p-4 md:p-5 font-medium text-gray-700 flex items-center">
+                <div className="grid grid-cols-4 border-b border-[#a08961]/20 bg-[#f5f3ee]">
+                  <div className="p-4 md:p-5 font-medium text-[#062f2e] flex items-center">
                     Community Members
                   </div>
                   {[0, 1, 2].map((index) => (
                     <div
                       key={index}
-                      className="p-4 md:p-5 text-center border-l border-gray-200 flex items-center justify-center"
+                      className="p-4 md:p-5 text-center border-l border-[#a08961]/20 flex items-center justify-center"
                     >
                       {loadingStates[index] ? (
-                        <div className="h-5 bg-gray-200 rounded animate-pulse w-8"></div>
+                        <div className="h-5 bg-[#a08961]/20 rounded animate-pulse w-8"></div>
                       ) : (
                         <div
                           className={`font-medium ${
                             selectedColleges[index]
-                              ? "text-gray-800"
-                              : "text-gray-400"
+                              ? "text-[#062f2e]"
+                              : "text-[#062f2e]/40"
                           }`}
                         >
                           {selectedColleges[index]?.members?.length || "—"}
@@ -769,48 +777,48 @@ const CollegeComparison = () => {
                 </div>
 
                 {/* Description */}
-                <div className="grid grid-cols-4 border-b border-gray-200 bg-white">
-                  <div className="p-4 md:p-5 font-medium text-gray-700">
+                <div className="grid grid-cols-4 border-b border-[#a08961]/20 bg-white">
+                  <div className="p-4 md:p-5 font-medium text-[#062f2e]">
                     Description
                   </div>
                   {[0, 1, 2].map((index) => (
                     <div
                       key={index}
-                      className="p-4 md:p-5 border-l border-gray-200 text-xs md:text-sm"
+                      className="p-4 md:p-5 border-l border-[#a08961]/20 text-xs md:text-sm"
                     >
                       {loadingStates[index] ? (
                         <div className="space-y-2">
-                          <div className="h-3 bg-gray-200 rounded animate-pulse w-full"></div>
-                          <div className="h-3 bg-gray-200 rounded animate-pulse w-5/6"></div>
-                          <div className="h-3 bg-gray-200 rounded animate-pulse w-4/6"></div>
+                          <div className="h-3 bg-[#a08961]/20 rounded animate-pulse w-full"></div>
+                          <div className="h-3 bg-[#a08961]/20 rounded animate-pulse w-5/6"></div>
+                          <div className="h-3 bg-[#a08961]/20 rounded animate-pulse w-4/6"></div>
                         </div>
                       ) : selectedColleges[index]?.description ? (
-                        <div className="max-h-24 md:max-h-28 overflow-y-auto text-gray-600 text-left">
+                        <div className="max-h-24 md:max-h-28 overflow-y-auto text-[#062f2e]/70 text-left">
                           {selectedColleges[index].description}
                         </div>
                       ) : (
-                        <div className="text-center text-gray-400">—</div>
+                        <div className="text-center text-[#062f2e]/40">—</div>
                       )}
                     </div>
                   ))}
                 </div>
 
                 {/* View Profile Buttons */}
-                <div className="grid grid-cols-4 bg-gray-50">
-                  <div className="p-4 md:p-5 font-medium text-gray-700 flex items-center">
+                <div className="grid grid-cols-4 bg-[#f5f3ee]">
+                  <div className="p-4 md:p-5 font-medium text-[#062f2e] flex items-center">
                     College Profile
                   </div>
                   {[0, 1, 2].map((index) => (
                     <div
                       key={index}
-                      className="p-4 md:p-5 flex justify-center border-l border-gray-200"
+                      className="p-4 md:p-5 flex justify-center border-l border-[#a08961]/20"
                     >
                       {loadingStates[index] ? (
-                        <div className="h-9 w-28 bg-gray-200 rounded-lg animate-pulse"></div>
+                        <div className="h-9 w-28 bg-[#a08961]/20 rounded-lg animate-pulse"></div>
                       ) : selectedColleges[index] ? (
                         <Link
                           to={`/college/${selectedColleges[index]._id}`}
-                          className="px-3 md:px-5 py-2 md:py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium shadow-sm flex items-center gap-1 md:gap-2 text-xs md:text-sm"
+                          className="px-3 md:px-5 py-2 md:py-2.5 bg-[#062f2e] text-white rounded-lg hover:bg-[#845c36] transition-colors font-medium shadow-sm flex items-center gap-1 md:gap-2 text-xs md:text-sm"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -835,7 +843,7 @@ const CollegeComparison = () => {
                           Visit Profile
                         </Link>
                       ) : (
-                        <span className="text-gray-400">—</span>
+                        <span className="text-[#062f2e]/40">—</span>
                       )}
                     </div>
                   ))}
@@ -845,7 +853,7 @@ const CollegeComparison = () => {
 
             {/* Metrics Comparison Section */}
             <div className="mt-8 mb-6">
-              <h2 className="text-xl font-bold mb-4">
+              <h2 className="text-xl font-bold mb-4 text-[#062f2e]">
                 College Metrics Comparison
               </h2>
 
@@ -860,9 +868,9 @@ const CollegeComparison = () => {
               }).map(([key, label]) => (
                 <div
                   key={key}
-                  className="grid grid-cols-4 border-b border-gray-200 py-4"
+                  className="grid grid-cols-4 border-b border-[#a08961]/20 py-4"
                 >
-                  <div className="font-medium">{label}</div>
+                  <div className="font-medium text-[#062f2e]">{label}</div>
 
                   {[0, 1, 2].map((index) => (
                     <div key={index} className="flex flex-col items-center">
@@ -888,7 +896,7 @@ const CollegeComparison = () => {
                                   >
                                     {/* Background star */}
                                     <svg
-                                      className="w-4 h-4 text-gray-300 absolute"
+                                      className="w-4 h-4 text-[#a08961]/30 absolute"
                                       fill="currentColor"
                                       viewBox="0 0 20 20"
                                     >
@@ -902,7 +910,7 @@ const CollegeComparison = () => {
                                         style={{ width: `${filled * 100}%` }}
                                       >
                                         <svg
-                                          className="w-4 h-4 text-yellow-400"
+                                          className="w-4 h-4 text-[#a08961]"
                                           fill="currentColor"
                                           viewBox="0 0 20 20"
                                         >
@@ -914,7 +922,7 @@ const CollegeComparison = () => {
                                 );
                               })}
                             </div>
-                            <span className="ml-1 text-xs">
+                            <span className="ml-1 text-xs text-[#062f2e]">
                               (
                               {parseFloat(
                                 selectedColleges[index]?.metrics?.[key]
@@ -927,7 +935,7 @@ const CollegeComparison = () => {
                           {/* Description with bullet points as a list */}
                           {selectedColleges[index]?.metrics?.[key]
                             ?.description ? (
-                            <div className="text-xs text-gray-600">
+                            <div className="text-xs text-[#062f2e]/70">
                               {selectedColleges[index]?.metrics?.[
                                 key
                               ]?.description.includes("•") ? (
@@ -954,13 +962,13 @@ const CollegeComparison = () => {
                               )}
                             </div>
                           ) : (
-                            <p className="text-xs text-gray-600">
+                            <p className="text-xs text-[#062f2e]/70">
                               No information
                             </p>
                           )}
                         </>
                       ) : (
-                        <span className="text-gray-400">—</span>
+                        <span className="text-[#062f2e]/40">—</span>
                       )}
                     </div>
                   ))}
@@ -970,10 +978,10 @@ const CollegeComparison = () => {
 
             {/* Mobile View: Comparison Cards */}
             <div className="md:hidden mt-8">
-              <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">
+              <h2 className="text-xl font-bold text-[#062f2e] mb-4 text-center">
                 Detailed Comparison
               </h2>
-              <p className="text-sm text-gray-600 text-center mb-6">
+              <p className="text-sm text-[#062f2e]/70 text-center mb-6">
                 Tap "See Details" on each college card to view detailed
                 information
               </p>
@@ -991,14 +999,14 @@ const CollegeComparison = () => {
                     disabled={!selectedColleges[index] || loadingStates[index]}
                     className={`px-3 py-1.5 rounded-full text-xs ${
                       !selectedColleges[index] || loadingStates[index]
-                        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                        : "bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
+                        ? "bg-[#a08961]/10 text-[#062f2e]/40 cursor-not-allowed"
+                        : "bg-[#a08961]/20 text-[#845c36] hover:bg-[#a08961]/30"
                     }`}
                   >
                     {loadingStates[index] ? (
                       <span className="flex items-center">
                         <svg
-                          className="animate-spin -ml-1 mr-2 h-3 w-3 text-indigo-700"
+                          className="animate-spin -ml-1 mr-2 h-3 w-3 text-[#845c36]"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
