@@ -13,7 +13,7 @@ import { UserProvider } from "./context/userContext.jsx";
 import Home from "./Pages/Home";
 import Auth from "./Pages/Auth";
 import About from "./Pages/about";
-// import AddColleges from "./Pages/addColleges";
+import AddColleges from "./Pages/addColleges";
 import CollegeProfile from "./Pages/CollegeProfile";
 import CollegeList from "./Pages/CollegeList";
 import UserProfile from "./Pages/UserProfile";
@@ -26,7 +26,7 @@ import MentorProfile from "./Pages/MentorProfile.jsx";
 import PageNotFound from "./Components/PageNotFound.jsx";
 import VerifyEmail from "./Pages/VerifyEmail.jsx";
 import CollegeComparison from "./Pages/CollegeComparison.jsx";
-// import UpdateCollege from "./Pages/UpdateCollege";
+import UpdateCollege from "./Pages/UpdateCollege";
 import ForgotPassword from "./Pages/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword";
 
@@ -101,10 +101,10 @@ const AnimatedRoutes = () => {
         <Route path="/auth" element={<CheckAuth element={<Auth />} />} />
         <Route path="/" element={<PrivateRoute element={<Home />} />} />
         <Route path="/about" element={<PrivateRoute element={<About />} />} />
-        {/* <Route
+        <Route
           path="/add-college"
           element={<PrivateRoute element={<AddColleges />} />}
-        /> */}
+        />
         <Route
           path="/college/:id"
           element={<PrivateRoute element={<CollegeProfile />} />}
@@ -136,10 +136,10 @@ const AnimatedRoutes = () => {
           path="/compare-colleges"
           element={<PrivateRoute element={<CollegeComparison />} />}
         />
-        {/* <Route
+        <Route
           path="/update-college"
           element={<PrivateRoute element={<UpdateCollege />} />}
-        /> */}
+        />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
 
