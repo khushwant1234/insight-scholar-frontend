@@ -6,12 +6,12 @@ import { FaLinkedin } from "react-icons/fa";
 
 const About = () => {
   // Company stats - replace with actual numbers
-  const stats = [
-    // { value: "50,000+", label: "Students Helped" },
-    // { value: "1,000+", label: "Partner Colleges" },
-    { value: "95%", label: "Satisfaction Rate" },
-    { value: "24/7", label: "Support" },
-  ];
+  // const stats = [
+  //   { value: "50,000+", label: "Students Helped" },
+  //   { value: "1,000+", label: "Partner Colleges" },
+  //   { value: "95%", label: "Satisfaction Rate" },
+  //   { value: "24/7", label: "Support" },
+  // ];
 
   // Team members with more detailed info
   const coreTeam = [
@@ -123,7 +123,7 @@ const About = () => {
         </section>
 
         {/* Stats Section */}
-        <section className="py-16 bg-[#f5f3ee]">
+        {/*<section className="py-16 bg-[#f5f3ee]">
           <div className="container mx-auto px-6">
             <div className="max-w-6xl mx-auto">
               <h2 className="text-3xl font-bold text-center text-[#062f2e] mb-12">
@@ -146,7 +146,7 @@ const About = () => {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Core Team Section */}
         <section className="py-16 bg-white">
