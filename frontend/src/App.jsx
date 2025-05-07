@@ -29,6 +29,7 @@ import CollegeComparison from "./Pages/CollegeComparison.jsx";
 // import UpdateCollege from "./Pages/UpdateCollege";
 import ForgotPassword from "./Pages/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword";
+import { Analytics } from "@vercel/analytics/react";
 
 const PrivateRoute = ({ element }) => {
   const location = useLocation();
@@ -159,6 +160,7 @@ function App() {
       <Router>
         <ToastContainer position="bottom-center" autoClose="1500" />
         <AnimatedRoutes />
+        <Analytics />
       </Router>
     </UserProvider>
   );
