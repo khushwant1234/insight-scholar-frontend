@@ -103,7 +103,7 @@ const Navbar = () => {
               >
                 Compare
               </Link>
-              <Link
+              {/* <Link
                 to="/add-college"
                 className={`text-white hover:text-[#a08961] font-medium text-sm transition-colors duration-200 py-1 border-b-2 ${
                   isActive("/compare")
@@ -122,7 +122,7 @@ const Navbar = () => {
                 }`}
               >
                 Update Colleges
-              </Link>
+              </Link> */}
             </div>
 
             {/* User Profile Dropdown */}
