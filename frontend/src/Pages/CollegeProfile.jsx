@@ -409,6 +409,25 @@ const CollegeProfile = () => {
     fetchMentors();
   }, [id]);
 
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+
+    // Format: May 5, 2025 at 2:30 PM
+    return (
+      date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }) +
+      " at " +
+      date.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      })
+    );
+  };
+
   if (loading) {
     return (
       <FadeWrapper>
@@ -644,7 +663,10 @@ const CollegeProfile = () => {
             </div>
 
             {posts.map((post) => {
-              const createdAt = new Date(post.createdAt).toLocaleString();
+              // Use displayCreatedAt if available, otherwise fall back to createdAt
+              const createdAt = formatDate(
+                post.displayCreatedAt || post.createdAt
+              );
 
               return (
                 <div
@@ -691,7 +713,7 @@ const CollegeProfile = () => {
                       </div>
                     )}
                     <span className="text-sm text-[#062f2e]/50 ml-auto">
-                      {createdAt}
+                      {formatDate(post.displayCreatedAt || post.createdAt)}
                     </span>
                   </div>
 
@@ -1158,7 +1180,10 @@ const CollegeProfile = () => {
                           : selectedPost.author.name}
                       </h4>
                       <p className="text-xs text-[#062f2e]/50">
-                        {new Date(selectedPost.createdAt).toLocaleString()}
+                        {formatDate(
+                          selectedPost.displayCreatedAt ||
+                            selectedPost.createdAt
+                        )}
                       </p>
                     </div>
                   </div>
@@ -1243,7 +1268,9 @@ const CollegeProfile = () => {
                             {reply.author.name}
                           </h4>
                           <span className="text-xs text-[#062f2e]/50">
-                            {new Date(reply.createdAt).toLocaleString()}
+                            {formatDate(
+                              reply.displayCreatedAt || reply.createdAt
+                            )}
                           </span>
                         </div>
                         <p className="text-sm text-[#062f2e]/80 mt-1">
