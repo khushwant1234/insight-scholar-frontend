@@ -36,19 +36,32 @@ const CollegeProfile = () => {
   const [mentorsLoading, setMentorsLoading] = useState(true);
   const [isAnonymous, setIsAnonymous] = useState(false);
 
+  // Add state for managing anonymity of replies
+  const [replyIsAnonymous, setReplyIsAnonymous] = useState({});
+
   useEffect(() => {
+    // Only fetch user data if there's no user in context already
     const fetchUserData = async () => {
-      try {
-        const response = await PostApiCall(`${backendUrl}/api/user/profile`);
-        const { success, ...userData } = response;
-        setUser(userData);
-      } catch (err) {
-        toast.error("Failed to fetch user data");
+      if (!user || !user._id) {
+        // Only fetch if user data is missing
+        try {
+          const response = await PostApiCall(`${backendUrl}/api/user/profile`);
+          if (response.success) {
+            const { success, ...userData } = response;
+            setUser(userData);
+          }
+        } catch (err) {
+          console.error("Failed to fetch user data:", err);
+          // Don't show toast error here
+        }
       }
     };
 
-    fetchUserData();
-  }, [setUser]);
+    // Only run if we need user data
+    if (!user || !user._id) {
+      fetchUserData();
+    }
+  }, [user, setUser]);
 
   useEffect(() => {
     setLoading(true);
@@ -293,6 +306,14 @@ const CollegeProfile = () => {
     setReplyText((prev) => ({ ...prev, [postId]: value }));
   };
 
+  // Add a new function for handling anonymous toggle for replies
+  const handleReplyAnonymousToggle = (postId) => {
+    setReplyIsAnonymous((prev) => ({
+      ...prev,
+      [postId]: !prev[postId],
+    }));
+  };
+
   const handleReplySubmit = async (e, postId) => {
     e.preventDefault();
     if (!replyText[postId] || replyText[postId].trim() === "") {
@@ -305,6 +326,7 @@ const CollegeProfile = () => {
         post: postId,
         content: replyText[postId],
         media: [],
+        isAnonymous: replyIsAnonymous[postId] || false, // Include the isAnonymous field
       });
       if (data.success || data.reply._id) {
         toast.success("Reply posted successfully");
@@ -312,6 +334,7 @@ const CollegeProfile = () => {
         toast.error("Failed to post reply");
       }
       setReplyText((prev) => ({ ...prev, [postId]: "" }));
+      setReplyIsAnonymous((prev) => ({ ...prev, [postId]: false }));
       setReplyFormVisible((prev) => ({ ...prev, [postId]: false }));
     } catch (error) {
       toast.error("Error posting reply:", error);
@@ -1256,28 +1279,70 @@ const CollegeProfile = () => {
                     key={reply._id}
                     className="bg-[#f5f3ee] p-3 rounded-lg border border-[#a08961]/10"
                   >
-                    <div className="flex items-start gap-3">
-                      <img
-                        src={reply.author.profilePic || "/user-icon.svg"}
-                        alt={reply.author.name}
-                        className="w-8 h-8 rounded-full mt-1"
-                      />
-                      <div className="flex-1">
-                        <div className="flex justify-between items-start">
-                          <h4 className="font-medium text-[#062f2e] text-sm">
-                            {reply.author.name}
-                          </h4>
-                          <span className="text-xs text-[#062f2e]/50">
-                            {formatDate(
-                              reply.displayCreatedAt || reply.createdAt
-                            )}
-                          </span>
-                        </div>
-                        <p className="text-sm text-[#062f2e]/80 mt-1">
-                          {reply.content}
-                        </p>
-                      </div>
+                    <div className="flex justify-between items-start">
+                      {/* Display anonymous user if isAnonymous is true */}
+                      <h4 className="font-medium text-[#062f2e] text-sm">
+                        {reply.isAnonymous
+                          ? "Anonymous User"
+                          : reply.author.name}
+                      </h4>
+                      <span className="text-xs text-[#062f2e]/50">
+                        {formatDate(reply.displayCreatedAt || reply.createdAt)}
+                      </span>
                     </div>
+                    <p className="text-sm text-[#062f2e]/80 mt-1">
+                      {reply.content}
+                    </p>
+                    {/* Display media if any */}
+                    {reply.media && reply.media.length > 0 && (
+                      <div className="mt-2 space-y-2">
+                        {reply.media.map((mediaUrl, index) => {
+                          const isImage = /\.(jpeg|jpg|gif|png|webp)$/i.test(
+                            mediaUrl
+                          );
+
+                          return isImage ? (
+                            <img
+                              key={index}
+                              src={mediaUrl}
+                              alt="Reply media"
+                              className="rounded-lg max-w-full h-auto max-h-96"
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src =
+                                  "https://via.placeholder.com/400x300?text=Image+Not+Available";
+                              }}
+                            />
+                          ) : (
+                            <a
+                              key={index}
+                              href={mediaUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block bg-white p-3 rounded-lg text-[#845c36] hover:bg-[#a08961]/10 border border-[#a08961]/10"
+                            >
+                              <div className="flex items-center">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-5 w-5 mr-2"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                                  />
+                                </svg>
+                                View Media
+                              </div>
+                            </a>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -1292,23 +1357,50 @@ const CollegeProfile = () => {
             {canReply && (
               <form
                 onSubmit={(e) => handleReplySubmit(e, openDrawerPost)}
-                className="mt-6"
+                className="mt-4 border-t border-[#a08961]/20 pt-4"
               >
                 <textarea
                   value={replyText[openDrawerPost] || ""}
                   onChange={(e) =>
                     handleReplyChange(openDrawerPost, e.target.value)
                   }
-                  placeholder="Add your reply..."
-                  className="w-full p-3 border border-[#a08961]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a08961] resize-none"
+                  placeholder="Write your reply..."
+                  className="w-full p-3 border border-[#a08961]/30 rounded-md focus:outline-none focus:ring-2 focus:ring-[#a08961]"
                   rows="3"
                 ></textarea>
-                <button
-                  type="submit"
-                  className="mt-2 bg-[#062f2e] text-white px-4 py-2 rounded-md hover:bg-[#845c36] transition-colors"
-                >
-                  Submit Reply
-                </button>
+
+                {/* Add anonymous checkbox */}
+                <div className="flex items-center mt-2">
+                  <input
+                    id={`drawer-reply-anonymous-checkbox`}
+                    type="checkbox"
+                    checked={replyIsAnonymous[openDrawerPost] || false}
+                    onChange={() => handleReplyAnonymousToggle(openDrawerPost)}
+                    className="h-4 w-4 text-[#a08961] border-[#a08961]/30 rounded focus:ring-[#a08961]"
+                  />
+                  <label
+                    htmlFor={`drawer-reply-anonymous-checkbox`}
+                    className="ml-2 text-sm text-[#062f2e]/70"
+                  >
+                    Reply anonymously
+                  </label>
+                </div>
+
+                <div className="flex justify-end mt-3">
+                  <button
+                    type="button"
+                    onClick={() => setOpenDrawerPost(null)}
+                    className="bg-gray-200 text-[#062f2e] px-4 py-2 rounded mr-2 hover:bg-gray-300 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-[#062f2e] text-white px-4 py-2 rounded hover:bg-[#845c36] transition-colors"
+                  >
+                    Submit Reply
+                  </button>
+                </div>
               </form>
             )}
           </div>

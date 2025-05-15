@@ -55,7 +55,7 @@ const Navbar = () => {
             <div className="flex space-x-5">
               <Link
                 to="/"
-                className={`text-white hover:text-[#a08961] font-medium transition-colors py-1 border-b-2 ${
+                className={`text-white hover:text-[#a08961] font-medium text-sm transition-colors duration-200 py-1 border-b-2 ${
                   isActive("/")
                     ? "border-[#a08961] text-[#a08961]"
                     : "border-transparent"

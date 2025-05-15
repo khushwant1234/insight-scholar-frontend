@@ -26,7 +26,7 @@ import MentorProfile from "./Pages/MentorProfile.jsx";
 import PageNotFound from "./Components/PageNotFound.jsx";
 import VerifyEmail from "./Pages/VerifyEmail.jsx";
 import CollegeComparison from "./Pages/CollegeComparison.jsx";
-// import UpdateCollege from "./Pages/UpdateCollege";
+import UpdateCollege from "./Pages/UpdateCollege";
 import ForgotPassword from "./Pages/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword";
 import { Analytics } from "@vercel/analytics/react";
@@ -140,10 +140,10 @@ const AnimatedRoutes = () => {
           path="/compare-colleges"
           element={<PrivateRoute element={<CollegeComparison />} />}
         />
-        {/* <Route
+        <Route
           path="/update-college"
           element={<PrivateRoute element={<UpdateCollege />} />}
-        /> */}
+        />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
 

@@ -103,6 +103,17 @@ const Home = () => {
     fetchTopComments();
   }, []);
 
+  // Add a helper function at the top of your component (inside the Home function)
+  const formatDisplayDate = (post) => {
+    // Use displayCreatedAt if available, otherwise fall back to createdAt
+    const dateToUse = post.displayCreatedAt || post.createdAt;
+
+    return new Date(dateToUse).toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+    });
+  };
+
   return (
     <FadeWrapper>
       <div className="min-h-screen bg-[#f5f3ee] flex flex-col">
@@ -246,15 +257,23 @@ const Home = () => {
                         <div className="flex items-center gap-3">
                           <img
                             src={
-                              post.author?.profilePic ||
-                              "https://api.dicebear.com/7.x/avataaars/svg?seed=Default"
+                              post.isAnonymous
+                                ? "https://api.dicebear.com/7.x/avataaars/svg?seed=Anonymous"
+                                : post.author?.profilePic ||
+                                  "https://api.dicebear.com/7.x/avataaars/svg?seed=Default"
                             }
-                            alt={post.author?.name}
+                            alt={
+                              post.isAnonymous
+                                ? "Anonymous User"
+                                : post.author?.name || "Unknown User"
+                            }
                             className="w-10 h-10 rounded-full border-2 border-[#a08961]/20"
                           />
                           <div>
                             <h4 className="font-medium text-[#062f2e]">
-                              {post.author?.name || "Anonymous"}
+                              {post.isAnonymous
+                                ? "Anonymous User"
+                                : post.author?.name || "Unknown User"}
                             </h4>
                             {post.college && (
                               <div className="flex items-center text-xs text-[#062f2e]/70">
@@ -302,10 +321,12 @@ const Home = () => {
                             <span className="font-medium">{post.upvotes}</span>
                           </div>
                           <span className="text-xs text-[#062f2e]/70 mt-1">
-                            {new Date(post.createdAt).toLocaleDateString(
-                              undefined,
-                              { month: "short", day: "numeric" }
-                            )}
+                            {new Date(
+                              post.displayCreatedAt || post.createdAt
+                            ).toLocaleDateString(undefined, {
+                              month: "short",
+                              day: "numeric",
+                            })}
                           </span>
                         </div>
                       </div>
