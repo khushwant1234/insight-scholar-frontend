@@ -270,7 +270,15 @@ const Auth = () => {
   if (loading) {
     return (
       <FadeWrapper>
-        <Loading />
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-[#f5f3ee] to-[#f5f3ee]/90">
+          <Loading />
+          <div className="mt-6 text-center">
+            <p className="mt-2 text-sm text-[#845c36] bg-[#a08961]/10 px-4 py-2 rounded-lg inline-block">
+              This might take up to 20 seconds since we're currently hosted on a
+              free server. Please be patient.
+            </p>
+          </div>
+        </div>
       </FadeWrapper>
     );
   }
