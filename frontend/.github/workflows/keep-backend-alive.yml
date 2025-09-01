@@ -1,0 +1,46 @@
+name: Keep Backend Alive
+
+on:
+  schedule:
+    # Runs every 5 minutes
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  ping-backend:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Ping Backend
+        run: |
+          echo "Pinging backend to keep it alive..."
+          
+          # Use the backend URL from GitHub secrets
+          BACKEND_URL="${{ secrets.BACKEND_URL }}"
+          
+          # Ping the backend with a simple health check
+          response=$(curl -s -o /dev/null -w "%{http_code}" "$BACKEND_URL/health" || echo "000")
+          
+          if [ "$response" = "200" ]; then
+            echo "✅ Backend is alive - HTTP $response"
+          elif [ "$response" = "404" ]; then
+            # If /health doesn't exist, try the root endpoint
+            response=$(curl -s -o /dev/null -w "%{http_code}" "$BACKEND_URL/" || echo "000")
+            if [ "$response" = "200" ] || [ "$response" = "404" ]; then
+              echo "✅ Backend is alive - HTTP $response"
+            else
+              echo "❌ Backend might be down - HTTP $response"
+            fi
+          else
+            echo "❌ Backend might be down - HTTP $response"
+            # Try root endpoint as fallback
+            response=$(curl -s -o /dev/null -w "%{http_code}" "$BACKEND_URL/" || echo "000")
+            echo "Fallback ping to root: HTTP $response"
+          fi
+          
+          echo "Ping completed at $(date)"
+
+      - name: Log Activity
+        run: |
+          echo "Keep-alive job executed successfully"
+          echo "Next execution in 5 minutes"
